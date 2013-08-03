@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:hc="com.hillelcoren.components.*"
+		 width="100%" height="100%">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import edu.isi.bmkeg.digitalLibrary.model.citations.Corpus;
+			import edu.isi.bmkeg.digitalLibrary.rl.events.FindCorpusByIdEvent;
+			import edu.isi.bmkeg.digitalLibrary.rl.events.ListCorpusEvent;
+			import edu.isi.bmkeg.vpdmf.model.instances.LightViewInstance;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var corpusList:ArrayCollection = new ArrayCollection();
+
+			[Bindable]
+			public var slaveList:ArrayCollection = new ArrayCollection();
+			
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// When you select a corpus, go get it. 
+			//
+			protected function handle_corpusComboChange(event:IndexChangeEvent):void
+			{
+
+				var i:int = event.newIndex;
+				
+				if( i >= 0 ) {
+					
+					var o:Object = corpusCombo.dataProvider.getItemAt(i);
+					var lvi:LightViewInstance = LightViewInstance(o);
+					var vpdmfId:Number = lvi.vpdmfId;
+					
+					var m:Corpus = new Corpus();
+					m.vpdmfId = vpdmfId
+					this.dispatchEvent( new FindCorpusByIdEvent(vpdmfId) );
+					
+				} 
+				
+			}
+					
+			//
+			// Define a custom function for the labelFunction property
+			// to display an Object in the ComboBox control.
+			//
+			public function myLabelFunc(item:Object):String {
+				var lvi:LightViewInstance = LightViewInstance(item);
+				
+				if( lvi == null )
+					return "-";
+				
+				return lvi.vpdmfLabel; 
+			}				
+			
+		]]>
+	</fx:Script>
+	
+	<s:Label top="10" fontSize="12" fontWeight="bold"
+			 horizontalCenter="0" text="Target Corpus"/>
+
+	<s:Group>
+		<s:layout>
+			 <s:HorizontalLayout />
+		 </s:layout>
+		<s:List id="corpusCombo" width="96%"
+					change="handle_corpusComboChange(event)"
+					dataProvider="{corpusList}"
+					labelFunction="myLabelFunc"
+					/>
+
+		<!--	<s:Button id="addOesButton" width="37" height="22" label="+" fontSize="16"/>
+		<s:Button id="removeOesButton" width="37" height="22" label="-" fontSize="16"/>-->
+	</s:Group>
+		
+</s:Group>

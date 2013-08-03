@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 initialize="init()"
+		 width="100" height="300">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<s:AsyncListView id="asyncListView" list="{documentsList}" createPendingItemFunction="createPendingItem"/>
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="default"/>	
+		<s:State name="noScores"/>	
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import edu.isi.bmkeg.digitalLibraryModule.events.*;
+			import edu.isi.bmkeg.ftd.rl.events.FindArticleDocumentByIdEvent;
+			import edu.isi.bmkeg.digitalLibrary.rl.events.FindArticleCitationDocumentByIdEvent;
+			
+			import edu.isi.bmkeg.pagedList.PagedList;
+			
+			import edu.isi.bmkeg.vpdmf.model.instances.LightViewInstance;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
+			import mx.collections.errors.ItemPendingError;
+			
+			import spark.events.GridSelectionEvent;
+			
+			[Bindable]
+			public var listLength:int;
+
+			[Bindable]
+			public var typItem:Object;
+
+			private var _documentsCollection:IList;
+			
+			[Bindable]
+			public function get documentsList():IList
+			{
+				return _documentsCollection;
+			}
+			
+			public function set documentsList(v:IList):void
+			{
+				_documentsCollection = v;
+			}
+			
+			public function get selectedIndex():int
+			{
+				return targetDocumentListDataGrid.selectedIndex;
+			}
+			
+			public function set selectedIndex(v:int):void 
+			{
+				targetDocumentListDataGrid.setSelectedIndex(v);
+			}
+			
+			public function init():void {
+
+				this.typItem = {
+						"ArticleCitation_7" : "12345678",
+						"ArticleCitation" : "not too long"
+				};
+							
+			}
+							
+			public function clearSelection():void {
+				
+				targetDocumentListDataGrid.clearSelection();
+			
+			}
+			
+			private function popupFormatter(item:Object, column:GridColumn):String {
+			
+				return item.vpdmfLabel;
+			
+			}
+			
+			private function selectionChangeHandler(event:GridSelectionEvent):void {
+			
+				var o:Object = targetDocumentListDataGrid.selectedItem;	
+				dispatchEvent(new FindArticleCitationDocumentByIdEvent(o.vpdmfId));
+			
+			}
+			
+			private function createPendingItem(index:int, ipe:ItemPendingError):Object {
+				
+				return {title: "..."};        
+			
+			}
+		]]>
+	</fx:Script>
+	<s:DataGrid id="targetDocumentListDataGrid" width="100%" height="100%" 
+				dataProvider="{asyncListView}"
+				selectionMode="multipleRows"
+  			    typicalItem="{typItem}"
+				selectionChange="selectionChangeHandler(event)"
+				sortableColumns="true">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn headerText="PMID"  
+							  dataField="ArticleCitation_7"
+							  dataTipFunction="popupFormatter"
+							  showDataTips="true"
+							  width="100"/>
+				<s:GridColumn headerText="Citation" 
+							  dataField="ArticleCitation"
+							  dataTipFunction="popupFormatter"
+							  showDataTips="true"/>
+			</s:ArrayList>
+		</s:columns>
+	</s:DataGrid>
+	<s:Label top="10" fontSize="12" horizontalCenter="0"  
+			 text="{listLength} Articles in Target Corpus."/>
+</s:Group>
