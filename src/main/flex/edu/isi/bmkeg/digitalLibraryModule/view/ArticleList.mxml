@@ -19,6 +19,7 @@
 	<fx:Script>
 		<![CDATA[
 			
+			import edu.isi.bmkeg.digitalLibrary.events.*;
 			import edu.isi.bmkeg.digitalLibraryModule.events.*;
 			import edu.isi.bmkeg.ftd.rl.events.FindArticleDocumentByIdEvent;
 			import edu.isi.bmkeg.digitalLibrary.rl.events.FindArticleCitationDocumentByIdEvent;
@@ -40,6 +41,9 @@
 			public var typItem:Object;
 
 			private var _documentsCollection:IList;
+			
+			private var file:FileReference;
+			public var fileFilters:String = ".pdf";
 			
 			[Bindable]
 			public function get documentsList():IList
@@ -95,8 +99,68 @@
 				return {title: "..."};        
 			
 			}
+			
+			// ~~~~~~~~~~~~~~~~~~~~~~
+			// UPLOAD PDF TO DATABASE
+			// ~~~~~~~~~~~~~~~~~~~~~~
+			private function addArticleHandler():void {
+				
+				file = new FileReference();
+				file.addEventListener(Event.SELECT, selectHandler);
+				
+				var f1:String = "";
+				var f2:String = "";
+				
+				var ff:Array = fileFilters.split(",");
+				
+				for each( var f:String in ff) {
+					if( f1.length > 0 ) {
+						f1 += ", ";
+						f2 += ";";
+					}
+					f1 += "*." + f; 
+					f2 += "*." + f; 
+				}
+				
+				var fileFilter:FileFilter = new FileFilter("Files: (" + f1 + ")", f2);
+				file.browse([fileFilter]);
+				
+			}
+			
+			private function selectHandler(event:Event):void
+			{
+				file.removeEventListener(Event.SELECT, selectHandler);
+				
+				file.addEventListener(Event.COMPLETE, loadCompleteHandler);
+				file.load();
+									
+			}
+			
+			private function loadCompleteHandler(event:Event):void {
+				
+				file.removeEventListener(Event.COMPLETE, loadCompleteHandler);
+				
+				var upEvent:Event = new UploadPdfFileEvent(file.data, file.name, null);
+				
+				this.dispatchEvent(upEvent);
+				
+			}
+			
+			private function removeArticleFromCorpusHandler():void {
+				
+				
+				
+			}
+			
+			private function deleteArticleHandler():void {
+				
+				        
+				
+			}
+			
 		]]>
 	</fx:Script>
+	
 	<s:DataGrid id="targetDocumentListDataGrid" width="100%" height="100%" 
 				dataProvider="{asyncListView}"
 				selectionMode="multipleRows"
@@ -119,4 +183,18 @@
 	</s:DataGrid>
 	<s:Label top="10" fontSize="12" horizontalCenter="0"  
 			 text="{listLength} Articles in Target Corpus."/>
+
+	<s:Group width="100%">
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Button id="addArticleButton" label="+" width="30" click="addArticleHandler()"
+				  toolTip="Upload a new article and add it to this corpus" />
+		<s:Button id="removeArticleButton" label="-" width="30" click="removeArticleFromCorpusHandler()"
+				  toolTip="Remove this article from this corpus" />		
+		<s:Button id="deleteArticleButton" label="x" width="30" click="deleteArticleHandler()"
+				  toolTip="Delete this article from the database" />		
+	</s:Group>
+	
+	
 </s:Group>

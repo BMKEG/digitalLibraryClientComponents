@@ -12,6 +12,12 @@ package edu.isi.bmkeg.digitalLibraryModule
 	import edu.isi.bmkeg.digitalLibrary.rl.services.serverInteraction.IDigitalLibraryServer;
 	import edu.isi.bmkeg.digitalLibrary.rl.services.serverInteraction.impl.DigitalLibraryServerImpl;
 	
+	import edu.isi.bmkeg.digitalLibrary.events.*;
+	import edu.isi.bmkeg.digitalLibrary.services.*;
+	import edu.isi.bmkeg.digitalLibrary.services.impl.*;
+	import edu.isi.bmkeg.digitalLibrary.services.serverInteraction.*;
+	import edu.isi.bmkeg.digitalLibrary.services.serverInteraction.impl.*;
+	
 	import edu.isi.bmkeg.digitalLibraryModule.controller.*;
 	import edu.isi.bmkeg.digitalLibraryModule.events.*;
 	import edu.isi.bmkeg.digitalLibraryModule.model.*;
@@ -46,6 +52,8 @@ package edu.isi.bmkeg.digitalLibraryModule
 			
 			injector.mapSingletonOf(IDigitalLibraryService, DigitalLibraryServiceImpl);
 			injector.mapSingletonOf(IDigitalLibraryServer, DigitalLibraryServerImpl);
+			injector.mapSingletonOf(IExtendedDigitalLibraryService, ExtendedDigitalLibraryServiceImpl);
+			injector.mapSingletonOf(IExtendedDigitalLibraryServer, ExtendedDigitalLibraryServerImpl);
 			injector.mapSingletonOf(IFtdServer, FtdServerImpl);
 			injector.mapSingletonOf(IFtdService, FtdServiceImpl);
 			
@@ -80,6 +88,10 @@ package edu.isi.bmkeg.digitalLibraryModule
 			commandMap.mapEvent(
 					FindArticleCitationDocumentByIdResultEvent.FIND_ARTICLECITATIONDOCUMENTBY_ID_RESULT, 
 					FindArticleCitationDocumentByIdResultCommand);
+
+			commandMap.mapEvent(
+				UploadPdfFileEvent.UPLOAD_PDF_FILE, 
+				UploadPdfFileCommand);
 						
 			commandMap.mapEvent(ClearCorpusEvent.CLEAR_CORPUS, ClearCorpusCommand);
 
