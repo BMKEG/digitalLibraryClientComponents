@@ -2,19 +2,19 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 {
 	import org.robotlegs.mvcs.Command;
 	
-	import edu.isi.bmkeg.digitalLibrary.rl.events.FindArticleCitationDocumentByIdEvent;
+	import edu.isi.bmkeg.digitalLibrary.rl.events.FindArticleCitationByIdEvent;
 	import edu.isi.bmkeg.digitalLibrary.rl.services.IDigitalLibraryService;
 	
-	public class FindArticleCitationDocumentByIdCommand extends Command
+	public class FindArticleCitationByIdCommand extends Command
 	{
 		[Inject]
-		public var event:FindArticleCitationDocumentByIdEvent;
+		public var event:FindArticleCitationByIdEvent;
 		
 		[Inject]
 		public var service:IDigitalLibraryService;
 		
 		override public function execute():void {
-			service.findArticleCitationDocumentById( event.id );	
+			service.findArticleCitationById( event.id );	
 		}
 		
 	}

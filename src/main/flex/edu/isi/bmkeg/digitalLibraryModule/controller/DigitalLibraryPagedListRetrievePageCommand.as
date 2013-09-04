@@ -22,7 +22,7 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 		override public function execute():void
 		{
 			if( model.queryLiteratureCitation != null ) {
-				this.dispatch( new ListArticleCitationDocumentPagedEvent(
+				this.dispatch( new ListArticleCitationPagedEvent(
 						model.queryLiteratureCitation, event.offset, event.count));
 			}
 			

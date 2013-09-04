@@ -10,6 +10,10 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction
 		// ~~~~~~~~~~~~~~~
 		function get addPmidEncodedPdfToCorpus():AbstractOperation;
 
+		function get removeFragmentBlock():AbstractOperation; 
+
+		function get listTermViews():AbstractOperation; 
+		
 	}
 
 }

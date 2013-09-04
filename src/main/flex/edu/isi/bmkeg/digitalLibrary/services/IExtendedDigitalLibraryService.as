@@ -1,6 +1,8 @@
 package edu.isi.bmkeg.digitalLibrary.services
 {
 
+	import edu.isi.bmkeg.ftd.model.*;
+
 	public interface IExtendedDigitalLibraryService {
 
 		// ~~~~~~~~~~~~~~~
@@ -9,6 +11,10 @@ package edu.isi.bmkeg.digitalLibrary.services
 		
 		function addPmidEncodedPdfToCorpus(pdfFileData:Object, fileName:String, corpusName:String=null):void;
 		
+		function removeFragmentBlock(frgBlk:FTDFragmentBlock):void;
+		
+		//java: public List<String> listTermViews() throws Exception
+		function listTermViews():void;
 	}
 
 }

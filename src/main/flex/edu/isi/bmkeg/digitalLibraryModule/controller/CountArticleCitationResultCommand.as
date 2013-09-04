@@ -9,11 +9,11 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 	
 	import flash.events.Event;
 	
-	public class CountArticleCitationDocumentResultCommand extends Command
+	public class CountArticleCitationResultCommand extends Command
 	{
 		
 		[Inject]
-		public var event:CountArticleCitationDocumentResultEvent;
+		public var event:CountArticleCitationResultEvent;
 		
 		[Inject]
 		public var model:DigitalLibraryPagedListModel;

@@ -33,23 +33,23 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 
 		override public function onRegister():void {
 			
-			addContextListener(FindArticleCitationDocumentByIdResultEvent.FIND_ARTICLECITATIONDOCUMENTBY_ID_RESULT, 
-				findArticleCitationDocumentByIdResultHandler);
+			addContextListener(FindArticleCitationByIdResultEvent.FIND_ARTICLECITATIONBY_ID_RESULT, 
+				findArticleCitationByIdResultHandler);
 
-			addContextListener(ListArticleCitationDocumentPagedEvent.LIST_ARTICLECITATIONDOCUMENT_PAGED, 
-				ListArticleCitationDocumentPagedHandler);
+			addContextListener(ListArticleCitationPagedEvent.LIST_ARTICLECITATION_PAGED, 
+				listArticleCitationPagedHandler);
 			
 			loadCurrentSelection();
 		}
 		
 	
-		private function ListArticleCitationDocumentPagedHandler(event:ListArticleCitationDocumentPagedEvent):void {
+		private function listArticleCitationPagedHandler(event:ListArticleCitationPagedEvent):void {
 			
 			loadCurrentSelection();
 			
 		}
 
-		private function findArticleCitationDocumentByIdResultHandler(event:FindArticleCitationDocumentByIdResultEvent):void {
+		private function findArticleCitationByIdResultHandler(event:FindArticleCitationByIdResultEvent):void {
 			
 			loadCurrentSelection();
 			
@@ -59,7 +59,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 			try {
 				
-				var a:LiteratureCitation = model.currentCitation;
+				var a:LiteratureCitation = model.citation;
 				
 				if (a == null) {
 
@@ -107,7 +107,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		{
 			var qo:ArticleCitation_qo = model.queryLiteratureCitation;
 						
-			dispatch(new ListArticleCitationDocumentPagedEvent(qo, index, list.pageSize));
+			dispatch(new ListArticleCitationPagedEvent(qo, index, list.pageSize));
 			
 		}
 		

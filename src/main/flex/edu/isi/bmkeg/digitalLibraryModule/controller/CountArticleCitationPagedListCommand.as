@@ -11,7 +11,7 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 	
 	import org.robotlegs.mvcs.Command;
 	
-	public class CountArticleCitationDocumentPagedListCommand extends Command
+	public class CountArticleCitationPagedListCommand extends Command
 	{
 	
 		[Inject]
@@ -26,7 +26,7 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 		override public function execute():void {
 			
 			if( model.queryLiteratureCitation != null ) {
-				digLibService.countArticleCitationDocument(model.queryLiteratureCitation);
+				digLibService.countArticleCitation(model.queryLiteratureCitation);
 			}
 			
 		}

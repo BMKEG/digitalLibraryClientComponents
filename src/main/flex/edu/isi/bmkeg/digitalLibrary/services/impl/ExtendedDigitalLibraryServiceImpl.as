@@ -1,7 +1,8 @@
 package edu.isi.bmkeg.digitalLibrary.services.impl
 {
 
-	import edu.isi.bmkeg.digitalLibrary.services.*;
+	import edu.isi.bmkeg.digitalLibrary.model.citations.*;
+	import edu.isi.bmkeg.ftd.model.*;
 	import edu.isi.bmkeg.digitalLibrary.events.*;
 	import edu.isi.bmkeg.digitalLibrary.services.*;
 	import edu.isi.bmkeg.digitalLibrary.services.serverInteraction.*;
@@ -69,9 +70,38 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 		
 		private function addPmidEncodedPdfToCorpusResultHandler(event:ResultEvent):void
 		{
-			var oesVpdmfId:Number = Number(event.result);
-			dispatch(new UploadPdfFileResultEvent(oesVpdmfId));
+			var ac:ArticleCitation = ArticleCitation(event.result);
+			dispatch(new UploadPdfFileResultEvent(ac));
 		}
+		
+		public function removeFragmentBlock(frgBlk:FTDFragmentBlock):void {
+			server.removeFragmentBlock.cancel();
+			server.removeFragmentBlock.addEventListener(ResultEvent.RESULT, removeFragmentBlockResultHandler);
+			server.removeFragmentBlock.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.removeFragmentBlock.send(frgBlk);			
+		}
+		
+		private function removeFragmentBlockResultHandler(event:ResultEvent):void
+		{
+			var completed:Boolean = Boolean(event.result);
+			dispatch(new RemoveAnnotationResultEvent(completed));
+		}
+	
+		public function listTermViews():void 
+		{
+			server.listTermViews.cancel();
+			server.listTermViews.addEventListener(ResultEvent.RESULT, listTermViewsResultHandler);
+			server.listTermViews.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.listTermViews.send();			
+			
+		}
+		
+		private function listTermViewsResultHandler(event:ResultEvent):void
+		{
+			var termList:ArrayCollection= ArrayCollection(event.result);
+			dispatch(new ListTermViewsResultEvent(termList));
+		}
+		
 	}
 
 }

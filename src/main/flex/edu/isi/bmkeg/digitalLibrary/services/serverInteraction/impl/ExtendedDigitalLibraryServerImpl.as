@@ -35,7 +35,16 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction.impl
 		{
 			return getOperation("addPmidEncodedPdfToCorpus");
 		}
-				
+
+		public function get removeFragmentBlock():AbstractOperation
+		{
+			return getOperation("removeFragmentBlock");
+		}
+		
+		public function get listTermViews():AbstractOperation
+		{
+			return getOperation("listTermViews");
+		}
 		
 	}
 

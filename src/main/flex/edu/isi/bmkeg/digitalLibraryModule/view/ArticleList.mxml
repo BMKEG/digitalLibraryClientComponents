@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
 		 initialize="init()"
-		 width="100" height="300">
+		 width="100%" height="300%">
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
@@ -22,7 +22,7 @@
 			import edu.isi.bmkeg.digitalLibrary.events.*;
 			import edu.isi.bmkeg.digitalLibraryModule.events.*;
 			import edu.isi.bmkeg.ftd.rl.events.FindArticleDocumentByIdEvent;
-			import edu.isi.bmkeg.digitalLibrary.rl.events.FindArticleCitationDocumentByIdEvent;
+			import edu.isi.bmkeg.digitalLibrary.rl.events.FindArticleCitationByIdEvent;
 			
 			import edu.isi.bmkeg.pagedList.PagedList;
 			
@@ -90,7 +90,7 @@
 			private function selectionChangeHandler(event:GridSelectionEvent):void {
 			
 				var o:Object = targetDocumentListDataGrid.selectedItem;	
-				dispatchEvent(new FindArticleCitationDocumentByIdEvent(o.vpdmfId));
+				dispatchEvent(new FindArticleCitationByIdEvent(o.vpdmfId));
 			
 			}
 			
@@ -160,6 +160,8 @@
 			
 		]]>
 	</fx:Script>
+	<s:Label top="10"  fontSize="16" fontWeight="bold"
+			 horizontalCenter="0" text="Articles"/>
 	
 	<s:DataGrid id="targetDocumentListDataGrid" width="100%" height="100%" 
 				dataProvider="{asyncListView}"
@@ -182,17 +184,23 @@
 		</s:columns>
 	</s:DataGrid>
 	<s:Label top="10" fontSize="12" horizontalCenter="0"  
-			 text="{listLength} Articles in Target Corpus."/>
+			 text="{listLength} Articles."/>
 
 	<s:Group width="100%">
 		<s:layout>
 			<s:HorizontalLayout/>
 		</s:layout>
-		<s:Button id="addArticleButton" label="+" width="30" click="addArticleHandler()"
+		<s:Button id="addArticleButton" width="37" height="22" fontSize="16" 
+				  label="+" 
+				  click="addArticleHandler()"
 				  toolTip="Upload a new article and add it to this corpus" />
-		<s:Button id="removeArticleButton" label="-" width="30" click="removeArticleFromCorpusHandler()"
+		<s:Button id="removeArticleButton" width="37" height="22" fontSize="16" 
+				  label="-" 
+				  click="removeArticleFromCorpusHandler()"
 				  toolTip="Remove this article from this corpus" />		
-		<s:Button id="deleteArticleButton" label="x" width="30" click="deleteArticleHandler()"
+		<s:Button id="deleteArticleButton" width="37" height="22" fontSize="16" 
+				  label="x" 
+				  click="deleteArticleHandler()"
 				  toolTip="Delete this article from the database" />		
 	</s:Group>
 	

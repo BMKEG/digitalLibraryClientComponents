@@ -5,7 +5,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import edu.isi.bmkeg.digitalLibrary.model.citations.*;
 	import edu.isi.bmkeg.digitalLibrary.model.qo.citations.*;
 	import edu.isi.bmkeg.digitalLibrary.rl.events.*;
-	import edu.isi.bmkeg.digitalLibrary.rl.events.FindArticleCitationDocumentByIdEvent;
+	import edu.isi.bmkeg.digitalLibrary.rl.events.FindArticleCitationByIdEvent;
 	import edu.isi.bmkeg.digitalLibraryModule.model.*;
 	import edu.isi.bmkeg.pagedList.events.*;
 	import edu.isi.bmkeg.pagedList.model.*;
@@ -32,21 +32,16 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			addContextListener(PagedListUpdatedEvent.UPDATED + DigitalLibraryPagedListModel.LIST_ID, 
 				targetDocumentsListUpdatedHandler);
 						
-			addViewListener(FindArticleCitationDocumentByIdEvent.FIND_ARTICLECITATIONDOCUMENT_BY_ID, 
+			addViewListener(FindArticleCitationByIdEvent.FIND_ARTICLECITATION_BY_ID, 
 				dispatch);
 
 			addViewListener(UploadPdfFileEvent.UPLOAD_PDF_FILE, uploadPdfFileEventHandler);
 
-			
 			listModel.pageSize = model.listPageSize;
-		
-			// If we already have a targetCorpus specified, then run this. 
-			if( model.corpus != null ) {
-				
-				view.documentsList = listModel.pagedList;
-				view.listLength = listModel.pagedListLength;
-				
-			}
+
+			var qo:ArticleCitation_qo = new ArticleCitation_qo();
+			var event:ListArticleCitationPagedEvent = new ListArticleCitationPagedEvent(qo,0,200);
+			this.dispatch( event );
 			
 		}
 		
@@ -67,7 +62,6 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			dispatch(event);
 			
 		}
-		
 		
 	}
 	

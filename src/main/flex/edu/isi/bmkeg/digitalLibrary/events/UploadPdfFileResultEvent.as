@@ -3,6 +3,7 @@ package edu.isi.bmkeg.digitalLibrary.events
 	
 	import flash.events.Event;
 	import flash.utils.ByteArray;
+	import edu.isi.bmkeg.digitalLibrary.model.citations.ArticleCitation;
 	
 	import mx.rpc.events.FaultEvent;
 	
@@ -11,16 +12,16 @@ package edu.isi.bmkeg.digitalLibrary.events
 		
 		public static const UPLOAD_PDF_FILE_RESULT:String = "uploadPdfFileResult";
 		
-		public var vpdmfId:Number;
+		public var ac:ArticleCitation;
 		
-		public function UploadPdfFileResultEvent(vpdmfId:Number) {
-			this.vpdmfId = vpdmfId;
+		public function UploadPdfFileResultEvent(ac:ArticleCitation) {
+			this.ac = ac;
 			super(UPLOAD_PDF_FILE_RESULT);
 		}
 		
 		override public function clone() : Event
 		{
-			return new UploadPdfFileResultEvent(vpdmfId);
+			return new UploadPdfFileResultEvent(ac);
 		}
 		
 	}
