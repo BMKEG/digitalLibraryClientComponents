@@ -14,6 +14,13 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction
 
 		function get listTermViews():AbstractOperation; 
 		
+		function get addArticlesToCorpus():AbstractOperation;
+
+		function get removeArticlesFromCorpus():AbstractOperation;
+
+		function get fullyDeleteArticle():AbstractOperation;
+
+		
 	}
 
 }

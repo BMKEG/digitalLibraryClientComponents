@@ -157,6 +157,8 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 
 			if( !event.target )
 				return;
+			
+			view.bitmaps = new ArrayCollection();
 
 			var clip:MovieClip = event.currentTarget.content as MovieClip;
 			

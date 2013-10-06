@@ -92,14 +92,52 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			server.listTermViews.cancel();
 			server.listTermViews.addEventListener(ResultEvent.RESULT, listTermViewsResultHandler);
 			server.listTermViews.addEventListener(FaultEvent.FAULT, faultHandler);
-			server.listTermViews.send();			
-			
+			server.listTermViews.send();				
 		}
 		
 		private function listTermViewsResultHandler(event:ResultEvent):void
 		{
-			var termList:ArrayCollection= ArrayCollection(event.result);
+			var termList:ArrayCollection = ArrayCollection(event.result);
 			dispatch(new ListTermViewsResultEvent(termList));
+		}
+		
+		public function addArticlesToCorpus(articleIds:ArrayCollection, corpusId:Number):void {
+			server.addArticlesToCorpus.cancel();
+			server.addArticlesToCorpus.addEventListener(ResultEvent.RESULT, addArticlesToCorpusResultHandler);
+			server.addArticlesToCorpus.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.addArticlesToCorpus.send(articleIds, corpusId);				
+		}
+		
+		private function addArticlesToCorpusResultHandler(event:ResultEvent):void
+		{
+			var count:Number = Number(event.result);
+			dispatch(new AddArticleCitationToCorpusResultEvent(count));
+		}
+		
+		public function removeArticlesFromCorpus(articleIds:ArrayCollection, corpusId:Number):void {
+			server.removeArticlesFromCorpus.cancel();
+			server.removeArticlesFromCorpus.addEventListener(ResultEvent.RESULT, removeArticlesFromCorpusResultHandler);
+			server.removeArticlesFromCorpus.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.removeArticlesFromCorpus.send(articleIds, corpusId);				
+		}
+		
+		private function removeArticlesFromCorpusResultHandler(event:ResultEvent):void
+		{
+			var count:Number = Number(event.result);
+			dispatch(new RemoveArticleCitationFromCorpusResultEvent(count));
+		}
+		
+		public function fullyDeleteArticle(articleId:Number):void {
+			server.fullyDeleteArticle.cancel();
+			server.fullyDeleteArticle.addEventListener(ResultEvent.RESULT, fullyDeleteArticleResultHandler);
+			server.fullyDeleteArticle.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.fullyDeleteArticle.send(articleId);				
+		}
+		
+		private function fullyDeleteArticleResultHandler(event:ResultEvent):void
+		{
+			var success:Boolean = Boolean(event.result);
+			dispatch(new FullyDeleteArticleResultEvent(success));
 		}
 		
 	}

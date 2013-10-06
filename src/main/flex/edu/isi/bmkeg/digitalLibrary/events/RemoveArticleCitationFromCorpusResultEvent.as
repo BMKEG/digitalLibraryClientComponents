@@ -11,17 +11,17 @@ package edu.isi.bmkeg.digitalLibrary.events
 		
 		public static const REMOVE_ARTICLE_CITATION_FROM_CORPUS_RESULT:String = "removeArticleCitationFromCorpusResult";
 		
-		public var success:Boolean;
+		public var count:int;
 		
-		public function RemoveArticleCitationFromCorpusResultEvent(success:Boolean)
+		public function RemoveArticleCitationFromCorpusResultEvent(count:int)
 		{
-			this.success = success;
+			this.count = count;
 			super(REMOVE_ARTICLE_CITATION_FROM_CORPUS_RESULT);
 		}
 		
 		override public function clone() : Event
 		{
-			return new RemoveArticleCitationFromCorpusResultEvent(success);
+			return new RemoveArticleCitationFromCorpusResultEvent(count);
 		}
 		
 	}

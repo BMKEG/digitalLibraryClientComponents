@@ -11,17 +11,17 @@ package edu.isi.bmkeg.digitalLibrary.events
 		
 		public static const ADD_ARTICLE_CITATION_TO_CORPUS_RESULT:String = "addArticleCitationToCorpusResult";
 		
-		public var success:Boolean;
+		public var countAdded:Number;
 		
-		public function AddArticleCitationToCorpusResultEvent(success:Boolean)
+		public function AddArticleCitationToCorpusResultEvent(countAdded:Number)
 		{
-			this.success = success;
+			this.countAdded = countAdded;
 			super(ADD_ARTICLE_CITATION_TO_CORPUS_RESULT);
 		}
 		
 		override public function clone() : Event
 		{
-			return new AddArticleCitationToCorpusResultEvent(success);
+			return new AddArticleCitationToCorpusResultEvent(countAdded);
 		}
 		
 	}

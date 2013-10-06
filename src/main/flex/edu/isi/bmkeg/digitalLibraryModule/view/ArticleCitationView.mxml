@@ -131,7 +131,8 @@
 			{
 				var s:Array =  new Array(a.length);
 				for (var i:int = 0; i < a.length; i++) {
-					s[i] = Author(a[i]).fullName;
+					s[i] = Author(a[i]).initials 
+						+ " " + Author(a[i]).surname;
 				}
 
 				return s;

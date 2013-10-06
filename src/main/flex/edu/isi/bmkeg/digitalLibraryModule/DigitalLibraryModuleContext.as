@@ -57,6 +57,7 @@ package edu.isi.bmkeg.digitalLibraryModule
 			
 			// Need a bit of extra detail to deal with popups
 			mediatorMap.mapView(CorpusPopup, CorpusPopupMediator, null, false, false);
+			mediatorMap.mapView(CorpusListPopup, CorpusListPopupMediator, null, false, false);
 			
 			injector.mapSingleton(DigitalLibraryModel);
 			injector.mapSingleton(DigitalLibraryPagedListModel);
@@ -95,11 +96,9 @@ package edu.isi.bmkeg.digitalLibraryModule
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// Change selection of the targetArticleCitation List control
 			// Run a query for the Document. 
-			commandMap.mapEvent(
-					FindArticleCitationByIdEvent.FIND_ARTICLECITATION_BY_ID, 
+			commandMap.mapEvent(FindArticleCitationByIdEvent.FIND_ARTICLECITATION_BY_ID, 
 					FindArticleCitationByIdCommand);
-			commandMap.mapEvent(
-					FindArticleCitationByIdResultEvent.FIND_ARTICLECITATIONBY_ID_RESULT, 
+			commandMap.mapEvent(FindArticleCitationByIdResultEvent.FIND_ARTICLECITATIONBY_ID_RESULT, 
 					FindArticleCitationByIdResultCommand);
 
 			commandMap.mapEvent(UploadPdfFileEvent.UPLOAD_PDF_FILE, 
@@ -110,13 +109,29 @@ package edu.isi.bmkeg.digitalLibraryModule
 			commandMap.mapEvent(InsertCorpusEvent.INSERT_CORPUS, InsertCorpusCommand);
 			commandMap.mapEvent(InsertCorpusResultEvent.INSERT_CORPUS_RESULT, 
 					InsertCorpusResultCommand);
+			
 			commandMap.mapEvent(UpdateCorpusEvent.UPDATE_CORPUS, UpdateCorpusCommand);
 			commandMap.mapEvent(UpdateCorpusResultEvent.UPDATE_CORPUS_RESULT, 
 					UpdateCorpusResultCommand);
 								
+			commandMap.mapEvent(DeleteCorpusByIdEvent.DELETE_CORPUS_BY_ID, 
+				DeleteCorpusByIdCommand);
+			commandMap.mapEvent(DeleteCorpusByIdResultEvent.DELETE_CORPUS_BY_ID_RESULT, 
+				DeleteCorpusByIdResultCommand);
+			
 			commandMap.mapEvent(ClearCorpusEvent.CLEAR_CORPUS, ClearCorpusCommand);
 			commandMap.mapEvent(LoadingPdfSwfCompleteEvent.LOADING_PDF_SWF_COMPLETE, 
 				LoadingPdfSwfCompleteCommand);
+			
+			commandMap.mapEvent(AddArticleCitationToCorpusEvent.ADD_ARTICLE_CITATION_TO_CORPUS, 
+				AddArticleCitationToCorpusCommand);
+			
+			commandMap.mapEvent(RemoveArticleCitationFromCorpusEvent.REMOVE_ARTICLE_CITATION_FROM_CORPUS, 
+				RemoveArticleCitationFromCorpusCommand);
+			
+			commandMap.mapEvent(FullyDeleteArticleEvent.FULLY_DELETE_ARTICLE, 
+				FullyDeleteArticleCommand);
+			
 			
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// Fragment based functions. 

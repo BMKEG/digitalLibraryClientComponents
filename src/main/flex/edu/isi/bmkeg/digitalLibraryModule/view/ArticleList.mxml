@@ -20,12 +20,10 @@
 		<![CDATA[
 			
 			import edu.isi.bmkeg.digitalLibrary.events.*;
+			import edu.isi.bmkeg.digitalLibrary.rl.events.*;
 			import edu.isi.bmkeg.digitalLibraryModule.events.*;
-			import edu.isi.bmkeg.ftd.rl.events.FindArticleDocumentByIdEvent;
-			import edu.isi.bmkeg.digitalLibrary.rl.events.FindArticleCitationByIdEvent;
-			
+			import edu.isi.bmkeg.ftd.rl.events.*;
 			import edu.isi.bmkeg.pagedList.PagedList;
-			
 			import edu.isi.bmkeg.vpdmf.model.instances.LightViewInstance;
 			
 			import mx.collections.ArrayCollection;
@@ -126,7 +124,7 @@
 				file.browse([fileFilter]);
 				
 			}
-			
+						
 			private function selectHandler(event:Event):void
 			{
 				file.removeEventListener(Event.SELECT, selectHandler);
@@ -145,17 +143,25 @@
 				this.dispatchEvent(upEvent);
 				
 			}
-			
-			private function removeArticleFromCorpusHandler():void {
+
+			// ~~~~~~~~~~~~~~~~~~~~~~~
+			// ADD ARTICLE TO CITATION
+			// ~~~~~~~~~~~~~~~~~~~~~~~
+			private function addArticleToCorpusHandler():void {		
 				
-				
+				this.dispatchEvent( new ActivateCorpusListPopupEvent() );
 				
 			}
+
+			private function removeArticleFromCorpusHandler():void {
+				this.dispatchEvent( 
+					new RemoveArticleCitationFromCorpusEvent(null, -1) 
+				);
+			}
 			
-			private function deleteArticleHandler():void {
-				
-				        
-				
+			private function deleteArticleHandler():void {        
+				var o:Object = targetDocumentListDataGrid.selectedItem;	
+				dispatchEvent(new FullyDeleteArticleEvent(o.vpdmfId));	
 			}
 			
 		]]>
@@ -191,17 +197,21 @@
 			<s:HorizontalLayout/>
 		</s:layout>
 		<s:Button id="addArticleButton" width="37" height="22" fontSize="16" 
-				  label="+" 
+				  label="^" 
 				  click="addArticleHandler()"
-				  toolTip="Upload a new article and add it to this corpus" />
-		<s:Button id="removeArticleButton" width="37" height="22" fontSize="16" 
-				  label="-" 
-				  click="removeArticleFromCorpusHandler()"
-				  toolTip="Remove this article from this corpus" />		
+				  toolTip="Upload a new article to the system" />
 		<s:Button id="deleteArticleButton" width="37" height="22" fontSize="16" 
 				  label="x" 
 				  click="deleteArticleHandler()"
-				  toolTip="Delete this article from the database" />		
+				  toolTip="Delete selected articles from the database" />		
+		<s:Button id="addArticleToCorpusButton" width="37" height="22" fontSize="16" 
+				  label="+" 
+				  click="addArticleToCorpusHandler()"
+				  toolTip="Add selected articles to a corpus" />
+		<s:Button id="removeArticleButton" width="37" height="22" fontSize="16" 
+				  label="-" 
+				  click="removeArticleFromCorpusHandler()"
+				  toolTip="Remove selected articles from this corpus" />		
 	</s:Group>
 	
 	

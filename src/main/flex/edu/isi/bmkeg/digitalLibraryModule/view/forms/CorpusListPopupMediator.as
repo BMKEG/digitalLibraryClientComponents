@@ -21,20 +21,25 @@ package edu.isi.bmkeg.digitalLibraryModule.view.forms
 	
 	import org.robotlegs.mvcs.Mediator;
 	
-	public class CorpusPopupMediator extends Mediator
+	public class CorpusListPopupMediator extends Mediator
 	{
 		
 		[Inject]
-		public var view:CorpusPopup;
+		public var view:CorpusListPopup;
 		
 		[Inject]
 		public var model:DigitalLibraryModel;
 
 		override public function onRegister():void {
 			
-			addViewListener(InsertCorpusEvent.INSERT_CORPUS, dispatch);
-			addViewListener(UpdateCorpusEvent.UPDATE_CORPUS, dispatch);
+			addViewListener(SelectCorpus.SELECT_CORPUS, dispatch);
 			addViewListener(ClosePopupEvent.CLOSE_POPUP, closePopup);
+			
+			for each( var o:Object in model.corpora) {
+				if( o.vpdmfLabel != null ) {
+					this.view.corpusList.addItem( o );
+				}
+			}
 
 		}
 		

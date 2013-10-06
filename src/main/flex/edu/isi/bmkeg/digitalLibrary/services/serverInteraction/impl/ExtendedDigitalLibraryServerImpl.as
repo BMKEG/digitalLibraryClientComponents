@@ -46,6 +46,21 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction.impl
 			return getOperation("listTermViews");
 		}
 		
+		public function get addArticlesToCorpus():AbstractOperation
+		{
+			return getOperation("addArticlesToCorpus");
+		}
+		
+		public function get removeArticlesFromCorpus():AbstractOperation
+		{
+			return getOperation("removeArticlesFromCorpus");
+		}		
+
+		public function get fullyDeleteArticle():AbstractOperation
+		{
+			return getOperation("fullyDeleteArticle");
+		}	
+		
 	}
 
 }

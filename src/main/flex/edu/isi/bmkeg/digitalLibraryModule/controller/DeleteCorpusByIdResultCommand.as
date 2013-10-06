@@ -21,7 +21,7 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 		override public function execute():void
 		{	
 			model.corpus = null;
-			this.dispatch(new ListCorpusEvent(new Corpus_qo()));				
+			this.dispatch(new ListCorpusEvent(new Corpus_qo()));
 		}
 		
 	}

@@ -1,14 +1,14 @@
 package edu.isi.bmkeg.digitalLibraryModule.view
 {
+	import edu.isi.bmkeg.digitalLibrary.events.*;
 	import edu.isi.bmkeg.digitalLibrary.model.citations.*;
 	import edu.isi.bmkeg.digitalLibrary.model.qo.citations.*;
-	import edu.isi.bmkeg.digitalLibrary.events.*;
 	import edu.isi.bmkeg.digitalLibrary.rl.events.*;
+	import edu.isi.bmkeg.digitalLibraryModule.events.*;
 	import edu.isi.bmkeg.digitalLibraryModule.model.*;
 	import edu.isi.bmkeg.digitalLibraryModule.view.forms.*;
-	import edu.isi.bmkeg.digitalLibraryModule.events.*;
 	import edu.isi.bmkeg.vpdmf.model.instances.LightViewInstance;
-
+	
 	import mx.managers.PopUpManager;
 	
 	import org.robotlegs.mvcs.Mediator;
@@ -26,20 +26,39 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 									
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// list the corpora. 
-			addViewListener(ListCorpusEvent.LIST_CORPUS, dispatch);
 			addContextListener(ListCorpusResultEvent.LIST_CORPUS_RESULT, 
 				listCorpusResultHandler);
 			
-			addViewListener(FindCorpusByIdEvent.FIND_CORPUS_BY_ID, 
-				dispatchFindCorpusById);
 			addContextListener(FindCorpusByIdResultEvent.FIND_CORPUSBY_ID_RESULT, 
 				handleLoadedTargetCorpus);
-	
+			
+			addViewListener(ListCorpusEvent.LIST_CORPUS, dispatch);
+			
+			addViewListener(FindCorpusByIdEvent.FIND_CORPUS_BY_ID, 
+				dispatchFindCorpusById);
+			
 			addViewListener(ActivateCorpusPopupEvent.ACTIVATE_CORPUS_POPUP, 
 				activateCorpusPopup);
 
 			addViewListener(ListArticleCitationPagedEvent.LIST_ARTICLECITATION_PAGED, 
 				dispatch);
+
+			addViewListener(DeleteCorpusByIdEvent.DELETE_CORPUS_BY_ID, 
+				dispatch);
+
+			addContextListener(SelectCorpus.SELECT_CORPUS, 
+				selectCorpus);
+
+			addContextListener(
+				AddArticleCitationToCorpusResultEvent.ADD_ARTICLE_CITATION_TO_CORPUS_RESULT, 
+				addArticleCitationToCorpusResult);
+
+			addContextListener(
+				RemoveArticleCitationFromCorpusResultEvent.REMOVE_ARTICLE_CITATION_FROM_CORPUS_RESULT, 
+				removeArticleCitationFromCorpusResult);
+
+			addContextListener(FullyDeleteArticleResultEvent.FULLY_DELETE_ARTICLE_RESULT, 
+				fullyDeleteArticleResult);
 			
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// On loading this control, we first list all the corpora on the server
@@ -49,6 +68,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 
 		public function listCorpusResultHandler(event:ListCorpusResultEvent):void {
 			view.corpusList = model.corpora;
+			view.corpusCombo.selectedIndex = 0;
 		}
 
 		
@@ -72,9 +92,9 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		
 		private function activateCorpusPopup(e:ActivateCorpusPopupEvent):void {
 
-			var popup:CorpusPopup = new CorpusPopup();
+			var popup:CorpusPopup = PopUpManager.createPopUp(this.view, CorpusPopup, true) as CorpusPopup;
+			PopUpManager.centerPopUp(popup);
 
-			PopUpManager.addPopUp( popup, contextView ); 
 			mediatorMap.createMediator( popup );
 
 			if( e.corpus == null || e.corpus.name == null )			
@@ -95,15 +115,40 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 
 			this.view.corpus = event.object;
 	
-			var acQ:ArticleCitation_qo = new ArticleCitation_qo();
-			var corpQ:Corpus_qo = new Corpus_qo();
-			acQ.corpora.addItem(corpQ);
-			
-			corpQ.name = model.corpus.name;
-			corpQ.vpdmfId = model.corpus.vpdmfId + "";
-			
-			this.dispatch( new ListArticleCitationPagedEvent(acQ, 0, 300) );
+			this.reloadArticleList();
 
+		}
+		
+		private function selectCorpus(event:SelectCorpus):void {
+						
+			for each( var c:Object in model.corpora ) {
+				if( c.vpdmfId == event.corpusId ) {
+					view.corpusCombo.selectedItem = c;
+					break;
+				}
+			}
+					
+		}
+
+		private function addArticleCitationToCorpusResult(
+			event:AddArticleCitationToCorpusResultEvent):void {
+			
+			this.reloadArticleList();
+			
+		}
+		
+		private function removeArticleCitationFromCorpusResult(
+			event:RemoveArticleCitationFromCorpusResultEvent):void {
+				
+			this.reloadArticleList();
+				
+		}
+
+		private function fullyDeleteArticleResult(
+			event:FullyDeleteArticleResultEvent):void {
+			
+			this.reloadArticleList();
+			
 		}
 		
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -115,6 +160,21 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			view.corpusCombo.selectedIndex = -1;
 			dispatch(new ListCorpusEvent(new Corpus_qo()));
 			
+		}
+		
+		private function reloadArticleList():void {
+			
+			var acQ:ArticleCitation_qo = new ArticleCitation_qo();
+			
+			if( model.corpus != null ) {
+				var corpQ:Corpus_qo = new Corpus_qo();
+				acQ.corpora.addItem(corpQ);
+				
+				corpQ.name = model.corpus.name;
+				corpQ.vpdmfId = model.corpus.vpdmfId + "";
+			}
+			
+			this.dispatch( new ListArticleCitationPagedEvent(acQ, 0, 300) );		
 		}
 
 		

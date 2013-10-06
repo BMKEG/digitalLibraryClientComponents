@@ -2,7 +2,8 @@ package edu.isi.bmkeg.digitalLibrary.services
 {
 
 	import edu.isi.bmkeg.ftd.model.*;
-
+	import mx.collections.ArrayCollection;
+	
 	public interface IExtendedDigitalLibraryService {
 
 		// ~~~~~~~~~~~~~~~
@@ -15,6 +16,13 @@ package edu.isi.bmkeg.digitalLibrary.services
 		
 		//java: public List<String> listTermViews() throws Exception
 		function listTermViews():void;
+
+		function addArticlesToCorpus(articleIds:ArrayCollection, corpusId:Number):void;
+
+		function removeArticlesFromCorpus(articleIds:ArrayCollection, corpusId:Number):void;
+
+		function fullyDeleteArticle(articleId:Number):void;		
+		
 	}
 
 }

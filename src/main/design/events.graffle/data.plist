@@ -34,7 +34,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2013-09-03 21:05:21 +0000</string>
+	<string>2013-09-04 18:48:11 +0000</string>
 	<key>Modifier</key>
 	<string>Gully Burns</string>
 	<key>NotesVisible</key>
@@ -1106,7 +1106,7 @@
 					<array>
 						<dict>
 							<key>Bounds</key>
-							<string>{{236.45960402672159, 28.273971863995598}, {264.32876586914062, 14}}</string>
+							<string>{{236.45960402672159, 28.273971863995598}, {237.62257385253906, 14}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
@@ -1142,7 +1142,7 @@
 						</dict>
 						<dict>
 							<key>Bounds</key>
-							<string>{{236.45960402672159, 42.273971863995598}, {264.32876586914062, 182}}</string>
+							<string>{{236.45960402672159, 42.273971863995598}, {237.62257385253906, 182}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
@@ -1202,7 +1202,7 @@ frgType:String}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{17.095889964276406, 39.972603942332753}, {180, 22}}</string>
+					<string>{{21.698629570043096, 28.27397078880783}, {180, 22}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
