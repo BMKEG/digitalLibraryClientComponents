@@ -6,13 +6,11 @@
   	<parent>
 	    <groupId>edu.isi.bmkeg</groupId>
 	    <artifactId>bmkeg-as-parent</artifactId>
-	    <version>1.1.3-SNAPSHOT</version>
+	    <version>1.1.5-SNAPSHOT</version>
 	    <relativePath>../bmkeg-as-parent</relativePath>
  	</parent>
 
-	<groupId>edu.isi.bmkeg</groupId>
 	<artifactId>digitalLibraryClientComponents</artifactId>
-	<version>1.1.3-SNAPSHOT</version>
 	<name>digitalLibraryComponents</name>
 	<packaging>swc</packaging>
 	
@@ -72,6 +70,13 @@
 			<groupId>com.devaldi</groupId>
 			<artifactId>flexpaper</artifactId>
 			<version>2.1.1-4.5mods</version>
+			<type>swc</type>
+		</dependency>
+
+		<dependency>
+			<groupId>com.hillelcoren</groupId>
+			<artifactId>flex-autocomplete-fx4</artifactId>
+			<version>1.2</version>
 			<type>swc</type>
 		</dependency>
 		

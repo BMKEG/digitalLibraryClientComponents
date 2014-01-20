@@ -26,13 +26,14 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 									
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// list the corpora. 
-			addContextListener(ListCorpusResultEvent.LIST_CORPUS_RESULT, 
+			addContextListener(ListArticleCorpusResultEvent.LIST_ARTICLECORPUS_RESULT, 
 				listCorpusResultHandler);
 			
 			addContextListener(FindCorpusByIdResultEvent.FIND_CORPUSBY_ID_RESULT, 
 				handleLoadedTargetCorpus);
 			
-			addViewListener(ListCorpusEvent.LIST_CORPUS, dispatch);
+			addViewListener(ListArticleCorpusEvent.LIST_ARTICLECORPUS, 
+				dispatch);
 			
 			addViewListener(FindCorpusByIdEvent.FIND_CORPUS_BY_ID, 
 				dispatchFindCorpusById);
@@ -62,11 +63,11 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// On loading this control, we first list all the corpora on the server
-			dispatch(new ListCorpusEvent(new Corpus_qo()));
+			dispatch(new ListArticleCorpusEvent(new Corpus_qo()));
 			
 		}
 
-		public function listCorpusResultHandler(event:ListCorpusResultEvent):void {
+		public function listCorpusResultHandler(event:ListArticleCorpusResultEvent):void {
 			view.corpusList = model.corpora;
 			view.corpusCombo.selectedIndex = 0;
 		}
@@ -158,7 +159,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 
 			view.currentState = "empty";
 			view.corpusCombo.selectedIndex = -1;
-			dispatch(new ListCorpusEvent(new Corpus_qo()));
+			dispatch(new ListArticleCorpusEvent(new Corpus_qo()));
 			
 		}
 		

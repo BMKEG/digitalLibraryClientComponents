@@ -37,8 +37,8 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 			var o:Object = new Object();
 			o.vpdmfLabel = lvi.vpdmfLabel;
 			o.vpdmfId = lvi.vpdmfId;
-			var fields:Array = lvi.indexTupleFields.split(/\<\|\>/);
-			var tuple:Array = lvi.indexTuple.split(/\<\|\>/);
+			var fields:Array = lvi.indexTupleFields.split(/\{\|\}/);
+			var tuple:Array = lvi.indexTuple.split(/\{\|\}/);
 			
 			for(var i:int=0; i<fields.length; i++) {
 				var f:String = fields[i] as String;

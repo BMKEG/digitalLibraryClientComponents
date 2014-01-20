@@ -577,7 +577,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				var t:Object = model.terms.getItemAt(i);
 				var o:Object = ColorPalette.colors.getItemAt(i);
 				var str:String = String(o.color);
-				var tempColor = uint("0x" + str.substr(1));
+				var tempColor:uint = uint("0x" + str.substr(1));
 				view.colorLookup[ t.tree ] = tempColor;
 			}
 					

@@ -13,7 +13,7 @@
 	
 	<s:states>
 		<s:State name="default"/>	
-		<s:State name="noScores"/>	
+		<s:State name="noEdit"/>	
 	</s:states>
 	
 	<fx:Script>
@@ -67,8 +67,13 @@
 			public function init():void {
 
 				this.typItem = {
-						"ArticleCitation_7" : "12345678",
-						"ArticleCitation" : "not too long"
+						"ArticleCitation_1" : "Name, Name, et al.",
+						"ArticleCitation_2" : "2000",
+						"ArticleCitation_3" : "Title of the paper...",
+						"ArticleCitation_4" : "Journal Name",
+						"ArticleCitation_5" : "999",
+						"ArticleCitation_6" : "0000-9999",
+						"ArticleCitation_7" : "12345678"
 				};
 							
 			}
@@ -174,7 +179,7 @@
 				selectionMode="multipleRows"
   			    typicalItem="{typItem}"
 				selectionChange="selectionChangeHandler(event)"
-				sortableColumns="true">
+				sortableColumns="false">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn headerText="PMID"  
@@ -182,8 +187,28 @@
 							  dataTipFunction="popupFormatter"
 							  showDataTips="true"
 							  width="100"/>
-				<s:GridColumn headerText="Citation" 
-							  dataField="ArticleCitation"
+				<s:GridColumn headerText="Authors" 
+							  dataField="ArticleCitation_1"
+							  dataTipFunction="popupFormatter"
+							  showDataTips="true"/>
+				<s:GridColumn headerText="Year" 
+							  dataField="ArticleCitation_2"
+							  dataTipFunction="popupFormatter"
+							  showDataTips="true"/>
+				<s:GridColumn headerText="Title" 
+							  dataField="ArticleCitation_3"
+							  dataTipFunction="popupFormatter"
+							  showDataTips="true"/>
+				<s:GridColumn headerText="Journal" 
+							  dataField="ArticleCitation_4"
+							  dataTipFunction="popupFormatter"
+							  showDataTips="true"/>
+				<s:GridColumn headerText="Volume" 
+							  dataField="ArticleCitation_5"
+							  dataTipFunction="popupFormatter"
+							  showDataTips="true"/>
+				<s:GridColumn headerText="Pages" 
+							  dataField="ArticleCitation_6"
 							  dataTipFunction="popupFormatter"
 							  showDataTips="true"/>
 			</s:ArrayList>
@@ -192,7 +217,7 @@
 	<s:Label top="10" fontSize="12" horizontalCenter="0"  
 			 text="{listLength} Articles."/>
 
-	<s:Group width="100%">
+	<s:Group width="100%" includeIn="default">
 		<s:layout>
 			<s:HorizontalLayout/>
 		</s:layout>

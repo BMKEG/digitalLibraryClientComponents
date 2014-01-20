@@ -73,6 +73,8 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			var ac:ArticleCitation = ArticleCitation(event.result);
 			dispatch(new UploadPdfFileResultEvent(ac));
 		}
+
+		// ~~~~~~~~~
 		
 		public function removeFragmentBlock(frgBlk:FTDFragmentBlock):void {
 			server.removeFragmentBlock.cancel();
@@ -86,7 +88,9 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			var completed:Boolean = Boolean(event.result);
 			dispatch(new RemoveAnnotationResultEvent(completed));
 		}
-	
+
+		// ~~~~~~~~~
+
 		public function listTermViews():void 
 		{
 			server.listTermViews.cancel();
@@ -101,6 +105,8 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			dispatch(new ListTermViewsResultEvent(termList));
 		}
 		
+		// ~~~~~~~~~
+
 		public function addArticlesToCorpus(articleIds:ArrayCollection, corpusId:Number):void {
 			server.addArticlesToCorpus.cancel();
 			server.addArticlesToCorpus.addEventListener(ResultEvent.RESULT, addArticlesToCorpusResultHandler);
@@ -113,7 +119,9 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			var count:Number = Number(event.result);
 			dispatch(new AddArticleCitationToCorpusResultEvent(count));
 		}
-		
+
+		// ~~~~~~~~~
+
 		public function removeArticlesFromCorpus(articleIds:ArrayCollection, corpusId:Number):void {
 			server.removeArticlesFromCorpus.cancel();
 			server.removeArticlesFromCorpus.addEventListener(ResultEvent.RESULT, removeArticlesFromCorpusResultHandler);
@@ -126,7 +134,9 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			var count:Number = Number(event.result);
 			dispatch(new RemoveArticleCitationFromCorpusResultEvent(count));
 		}
-		
+
+		// ~~~~~~~~~
+
 		public function fullyDeleteArticle(articleId:Number):void {
 			server.fullyDeleteArticle.cancel();
 			server.fullyDeleteArticle.addEventListener(ResultEvent.RESULT, fullyDeleteArticleResultHandler);
@@ -138,6 +148,101 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 		{
 			var success:Boolean = Boolean(event.result);
 			dispatch(new FullyDeleteArticleResultEvent(success));
+		}
+
+		// ~~~~~~~~~
+
+		public function listExtendedJournalEpochs():void {
+			server.listExtendedJournalEpochs.cancel();
+			server.listExtendedJournalEpochs.addEventListener(ResultEvent.RESULT, listExtendedJournalEpochsResultHandler);
+			server.listExtendedJournalEpochs.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.listExtendedJournalEpochs.send();				
+		}
+		
+		private function listExtendedJournalEpochsResultHandler(event:ResultEvent):void
+		{
+			var epochList:ArrayCollection = ArrayCollection(event.result);
+			dispatch(new ListExtendedJournalEpochsResultEvent(epochList));
+		}
+		
+		// ~~~~~~~~~
+		
+		public function addRuleFileToJournalEpoch(ruleFileId:Number, 
+												  epochId:Number,
+												  epochJournal:String,
+												  epochStart:Number,
+												  epochEnd:Number):void {
+			server.addRuleFileToJournalEpoch.cancel();
+			server.addRuleFileToJournalEpoch.addEventListener(ResultEvent.RESULT, addRuleFileToJournalEpochResultHandler);
+			server.addRuleFileToJournalEpoch.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.addRuleFileToJournalEpoch.send(ruleFileId, epochId, 
+				epochJournal, epochStart, epochEnd);				
+		}
+		
+		private function addRuleFileToJournalEpochResultHandler(event:ResultEvent):void
+		{
+			var id:Number = Number(event.result);
+			dispatch(new AddRuleFileToJournalEpochResultEvent(id));
+		}
+		
+		// ~~~~~~~~~
+		
+		public function retrieveFTDRuleSetForArticleCitation(articleId:Number):void {
+			server.retrieveFTDRuleSetForArticleCitation.cancel();
+			server.retrieveFTDRuleSetForArticleCitation.addEventListener(ResultEvent.RESULT, retrieveFTDRuleSetForArticleCitationHandler);
+			server.retrieveFTDRuleSetForArticleCitation.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.retrieveFTDRuleSetForArticleCitation.send(articleId);				
+		}
+		
+		private function retrieveFTDRuleSetForArticleCitationHandler(event:ResultEvent):void
+		{
+			var ruleSet:FTDRuleSet = FTDRuleSet(event.result);
+			dispatch(new RetrieveFTDRuleSetForArticleCitationResultEvent(ruleSet));
+		}
+
+		// ~~~~~~~~~
+		
+		public function runRuleSetOnArticleCitation(ruleSetId:Number, articleId:Number):void {
+			server.runRuleSetOnArticleCitation.cancel();
+			server.runRuleSetOnArticleCitation.addEventListener(ResultEvent.RESULT, runRuleSetOnArticleCitationHandler);
+			server.runRuleSetOnArticleCitation.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.runRuleSetOnArticleCitation.send(ruleSetId, articleId);				
+		}
+		
+		private function runRuleSetOnArticleCitationHandler(event:ResultEvent):void
+		{
+			var articleId:Number = Number(event.result);
+			dispatch(new RunRuleSetOnArticleCitationResultEvent(articleId));
+		}
+		
+		// ~~~~~~~~~
+		
+		public function runRuleSetOnJournalEpoch(epochId:Number):void {
+			server.runRuleSetOnJournalEpoch.cancel();
+			server.runRuleSetOnJournalEpoch.addEventListener(ResultEvent.RESULT, runRuleSetOnJournalEpochResultHandler);
+			server.runRuleSetOnJournalEpoch.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.runRuleSetOnJournalEpoch.send(epochId);				
+		}
+		
+		private function runRuleSetOnJournalEpochResultHandler(event:ResultEvent):void
+		{
+			var articleId:Number = Number(event.result);
+			dispatch(new RunRuleSetOnArticleCitationResultEvent(articleId));
+		}
+		
+		// ~~~~~~~~~
+		
+		public function generateRuleFileFromLapdf(articleId:Number):void {
+			server.generateRuleFileFromLapdf.cancel();
+			server.generateRuleFileFromLapdf.addEventListener(ResultEvent.RESULT, generateRuleFileFromLapdfHandler);
+			server.generateRuleFileFromLapdf.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.generateRuleFileFromLapdf.send(articleId);				
+		}
+		
+		private function generateRuleFileFromLapdfHandler(event:ResultEvent):void
+		{
+			var csvText:String = String(event.result);
+			dispatch(new GenerateRuleFileFromLapdfResultEvent(csvText));
 		}
 		
 	}

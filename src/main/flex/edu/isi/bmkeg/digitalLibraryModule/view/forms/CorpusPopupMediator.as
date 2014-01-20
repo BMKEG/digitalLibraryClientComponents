@@ -45,7 +45,6 @@ package edu.isi.bmkeg.digitalLibraryModule.view.forms
 			
 		}
 		
-		
 	}
 
 }

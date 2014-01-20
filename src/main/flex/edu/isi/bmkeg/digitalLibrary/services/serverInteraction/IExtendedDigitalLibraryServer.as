@@ -20,6 +20,17 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction
 
 		function get fullyDeleteArticle():AbstractOperation;
 
+		function get listExtendedJournalEpochs():AbstractOperation;
+
+		function get addRuleFileToJournalEpoch():AbstractOperation;
+
+		function get retrieveFTDRuleSetForArticleCitation():AbstractOperation;
+
+		function get runRuleSetOnArticleCitation():AbstractOperation;
+
+		function get generateRuleFileFromLapdf():AbstractOperation;
+
+		function get runRuleSetOnJournalEpoch():AbstractOperation;
 		
 	}
 

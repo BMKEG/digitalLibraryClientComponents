@@ -96,7 +96,7 @@
 	<s:Label top="10" fontSize="16" fontWeight="bold"
 			 horizontalCenter="0" text="Corpora"/>
 	
-	<s:List id="corpusCombo" width="100%" height="100%"
+	<s:List id="corpusCombo" width="100%" height="50%"
 			change="handle_corpusComboChange(event)"
 			dataProvider="{corpusList}"
 		 	doubleClickEnabled="true"

@@ -60,7 +60,37 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction.impl
 		{
 			return getOperation("fullyDeleteArticle");
 		}	
+	
+		public function get listExtendedJournalEpochs():AbstractOperation
+		{
+			return getOperation("listExtendedJournalEpochs");
+		}	
+
+		public function get addRuleFileToJournalEpoch():AbstractOperation
+		{
+			return getOperation("addRuleFileToJournalEpoch");
+		}	
+
+		public function get retrieveFTDRuleSetForArticleCitation():AbstractOperation
+		{
+			return getOperation("retrieveFTDRuleSetForArticleCitation");
+		}	
+
+		public function get runRuleSetOnArticleCitation():AbstractOperation
+		{
+			return getOperation("runRuleSetOnArticleCitation");
+		}	
+
+		public function get runRuleSetOnJournalEpoch():AbstractOperation
+		{
+			return getOperation("runRuleSetOnJournalEpoch");
+		}	
 		
+		public function get generateRuleFileFromLapdf():AbstractOperation
+		{
+			return getOperation("generateRuleFileFromLapdf");
+		}	
+
 	}
 
 }

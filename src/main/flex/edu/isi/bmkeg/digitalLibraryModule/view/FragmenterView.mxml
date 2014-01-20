@@ -9,7 +9,7 @@
 		 height="100%">	
 	
 	<s:layout>
-		<s:VerticalLayout paddingLeft="5" paddingRight="5" paddingTop="0" paddingBottom="5"/>
+		<s:VerticalLayout/>
 	</s:layout>
 	
 	<fx:Style>

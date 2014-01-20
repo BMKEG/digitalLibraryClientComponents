@@ -4,22 +4,22 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 	
 	import edu.isi.bmkeg.digitalLibrary.rl.services.IDigitalLibraryService;
 	import edu.isi.bmkeg.digitalLibrary.model.citations.Corpus;
-	import edu.isi.bmkeg.digitalLibrary.rl.events.ListCorpusEvent;
+	import edu.isi.bmkeg.digitalLibrary.rl.events.ListArticleCorpusEvent;
 	
 	import flash.events.Event;
 	
-	public class ListCorpusCommand extends Command
+	public class ListArticleCorpusCommand extends Command
 	{
 	
 		[Inject]
-		public var event:ListCorpusEvent;
+		public var event:ListArticleCorpusEvent;
 
 		[Inject]
 		public var service:IDigitalLibraryService;
 				
 		override public function execute():void
 		{
-			service.listCorpus(event.object);
+			service.listArticleCorpus( event.object );
 		}
 		
 	}

@@ -73,8 +73,10 @@ package edu.isi.bmkeg.digitalLibraryModule
 			
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// list the corpora on the server
-			commandMap.mapEvent(ListCorpusEvent.LIST_CORPUS, ListCorpusCommand);
-			commandMap.mapEvent(ListCorpusResultEvent.LIST_CORPUS_RESULT, ListCorpusResultCommand);
+			commandMap.mapEvent(ListArticleCorpusEvent.LIST_ARTICLECORPUS, 
+					ListArticleCorpusCommand);
+			commandMap.mapEvent(ListArticleCorpusResultEvent.LIST_ARTICLECORPUS_RESULT, 
+					ListArticleCorpusResultCommand);
 
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// load the target corpus
