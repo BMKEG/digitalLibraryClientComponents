@@ -15,7 +15,7 @@ package edu.isi.bmkeg.digitalLibrary.events
 		public var epochId:Number;
 		
 		public function RunRuleSetOnJournalEpochEvent(
-			epochId:Number, bubbles, cancelable)
+			epochId:Number, bubbles:Boolean, cancelable:Boolean)
 		{
 			super(RUN_RULE_SET_ON_JOURNAL_EPOCH, bubbles, cancelable);
 			this.epochId = epochId;

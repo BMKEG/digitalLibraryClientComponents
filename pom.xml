@@ -11,7 +11,7 @@
  	</parent>
 
 	<artifactId>digitalLibraryClientComponents</artifactId>
-	<name>digitalLibraryComponents</name>
+	<name>Digital Library Client Components</name>
 	<packaging>swc</packaging>
 	
 	<dependencies>
