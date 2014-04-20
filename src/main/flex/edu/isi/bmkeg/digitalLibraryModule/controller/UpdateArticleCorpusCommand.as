@@ -8,18 +8,18 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 	
 	import flash.events.Event;
 	
-	public class UpdateCorpusCommand extends Command
+	public class UpdateArticleCorpusCommand extends Command
 	{
 		
 		[Inject]
-		public var event:UpdateCorpusEvent;
+		public var event:UpdateArticleCorpusEvent;
 		
 		[Inject]
 		public var service:IDigitalLibraryService;
 		
 		override public function execute():void
 		{
-			service.updateCorpus(event.object);
+			service.updateArticleCorpus(event.object);
 		}
 		
 	}

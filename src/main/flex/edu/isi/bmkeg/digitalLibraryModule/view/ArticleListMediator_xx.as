@@ -17,7 +17,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	
 	import org.robotlegs.mvcs.Mediator;
 	
-	public class ArticleListMediator extends Mediator
+	public class ArticleListMediator_xx extends Mediator
 	{
 		[Inject]
 		public var view:ArticleList;

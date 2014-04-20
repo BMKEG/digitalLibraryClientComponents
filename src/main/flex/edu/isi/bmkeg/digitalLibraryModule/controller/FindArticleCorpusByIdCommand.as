@@ -8,18 +8,18 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 	
 	import flash.events.Event;
 	
-	public class FindCorpusByIdCommand extends Command
+	public class FindArticleCorpusByIdCommand extends Command
 	{
 	
 		[Inject]
-		public var event:FindCorpusByIdEvent;
+		public var event:FindArticleCorpusByIdEvent;
 
 		[Inject]
 		public var service:IDigitalLibraryService;
 				
 		override public function execute():void
 		{
-			service.findCorpusById(event.id);
+			service.findArticleCorpusById(event.id);
 		}
 		
 	}

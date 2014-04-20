@@ -32,8 +32,8 @@ package edu.isi.bmkeg.digitalLibraryModule.view.forms
 
 		override public function onRegister():void {
 			
-			addViewListener(InsertCorpusEvent.INSERT_CORPUS, dispatch);
-			addViewListener(UpdateCorpusEvent.UPDATE_CORPUS, dispatch);
+			addViewListener(InsertArticleCorpusEvent.INSERT_ARTICLECORPUS, dispatch);
+			addViewListener(UpdateArticleCorpusEvent.UPDATE_ARTICLECORPUS, dispatch);
 			addViewListener(ClosePopupEvent.CLOSE_POPUP, closePopup);
 
 		}

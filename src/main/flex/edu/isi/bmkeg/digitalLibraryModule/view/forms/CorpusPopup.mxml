@@ -22,17 +22,18 @@
 			}            
 			
 			// Handle the OK button.
-			private function processLogin():void {
+			private function clickOk():void {
 
 				var c:Corpus = new Corpus();
 				c.name = this.cName.text;
 				c.description = this.desc.text;
+				c.regex = this.regexCode.text;
 				c.vpdmfId = this.vpdmfId;
 				
 				if( isNaN(vpdmfId) ) {
-					this.dispatchEvent( new InsertCorpusEvent(c) );
+					this.dispatchEvent( new InsertArticleCorpusEvent(c) );
 				} else {
-					this.dispatchEvent( new UpdateCorpusEvent(c) );					
+					this.dispatchEvent( new UpdateArticleCorpusEvent(c) );					
 				}
 				this.dispatchEvent(new ClosePopupEvent(this));
 			}
@@ -43,13 +44,16 @@
 		<s:FormItem label="Name">
 			<s:TextInput id="cName" width="100%"/>
 		</s:FormItem> 
+		<s:FormItem label="Regex Code">
+			<s:TextInput id="regexCode" width="100%"/>
+		</s:FormItem> 		
 		<s:FormItem label="Description">
 			<s:TextArea id="desc" heightInLines="3" width="100%"/>
 		</s:FormItem> 
 	</s:Form>
 	<s:HGroup> 
 		<s:Button label="OK"
-				  click="processLogin();" /> 
+				  click="clickOk();" /> 
 		<s:Button label="Cancel"
 				  click="handleCloseEvent();"/> 
 	</s:HGroup> 

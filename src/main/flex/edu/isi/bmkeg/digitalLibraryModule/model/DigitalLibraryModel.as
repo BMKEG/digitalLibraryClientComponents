@@ -11,6 +11,7 @@ package edu.isi.bmkeg.digitalLibraryModule.model
 	
 	import mx.collections.ArrayCollection;
 	import mx.utils.UIDUtil;
+	import flash.utils.ByteArray;
 	
 	import org.robotlegs.mvcs.Actor;
 	

@@ -37,8 +37,18 @@ package edu.isi.bmkeg.digitalLibrary.services
 		function runRuleSetOnArticleCitation(ruleSetId:Number, articleId:Number):void;
 
 		function runRuleSetOnJournalEpoch(epochId:Number):void;
+
+		function runRulesOverAllEpochs():void;
 		
 		function generateRuleFileFromLapdf(articleId:Number):void;
+
+		function loadSwf(vpdmfId:Number):void;
+
+		function loadXml(vpdmfId:Number):void;
+
+		function loadPmcXml(vpdmfId:Number):void;
+
+		function loadHtml(vpdmfId:Number):void;
 		
 	}
 

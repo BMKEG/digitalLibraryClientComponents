@@ -35,7 +35,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			addViewListener(ListArticleCorpusEvent.LIST_ARTICLECORPUS, 
 				dispatch);
 			
-			addViewListener(FindCorpusByIdEvent.FIND_CORPUS_BY_ID, 
+			addViewListener(FindArticleCorpusByIdEvent.FIND_ARTICLECORPUS_BY_ID, 
 				dispatchFindCorpusById);
 			
 			addViewListener(ActivateCorpusPopupEvent.ACTIVATE_CORPUS_POPUP, 
@@ -73,7 +73,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		}
 
 		
-		public function dispatchFindCorpusById(event:FindCorpusByIdEvent):void {
+		public function dispatchFindCorpusById(event:FindArticleCorpusByIdEvent):void {
 			
 			model.corpus = new Corpus();
 			model.corpus.vpdmfId = event.id;

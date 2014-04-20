@@ -1,14 +1,20 @@
 package edu.isi.bmkeg.digitalLibrary.services.impl
 {
 
-	import edu.isi.bmkeg.digitalLibrary.model.citations.*;
-	import edu.isi.bmkeg.ftd.model.*;
 	import edu.isi.bmkeg.digitalLibrary.events.*;
+	import edu.isi.bmkeg.utils.*;
+	import edu.isi.bmkeg.digitalLibrary.model.citations.*;
 	import edu.isi.bmkeg.digitalLibrary.services.*;
 	import edu.isi.bmkeg.digitalLibrary.services.serverInteraction.*;
+	import edu.isi.bmkeg.ftd.model.*;
 	import edu.isi.bmkeg.utils.dao.*;
 	
+	import flash.display.*;
+	import flash.events.*;
 	import flash.events.Event;
+	import flash.geom.Matrix;
+	import flash.net.*;
+	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	
 	import mx.collections.ArrayCollection;
@@ -20,11 +26,15 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 	import mx.rpc.events.ResultEvent;
 	
 	import org.robotlegs.mvcs.Actor;
+	import org.libspark.utils.ForcibleLoader;
 
 	public class ExtendedDigitalLibraryServiceImpl extends Actor implements IExtendedDigitalLibraryService {
 
 		private var _server:IExtendedDigitalLibraryServer;
 
+		private var ldr:Loader;
+		private var clip:MovieClip;
+		
 		[Inject]
 		public function get server():IExtendedDigitalLibraryServer
 
@@ -226,8 +236,8 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 		
 		private function runRuleSetOnJournalEpochResultHandler(event:ResultEvent):void
 		{
-			var articleId:Number = Number(event.result);
-			dispatch(new RunRuleSetOnArticleCitationResultEvent(articleId));
+			var epochId:Number = Number(event.result);
+			dispatch(new RunRuleSetOnJournalEpochResultEvent(epochId));
 		}
 		
 		// ~~~~~~~~~
@@ -244,6 +254,100 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			var csvText:String = String(event.result);
 			dispatch(new GenerateRuleFileFromLapdfResultEvent(csvText));
 		}
+		
+		// ~~~~~~~~~
+		
+		public function runRulesOverAllEpochs():void {
+			server.runRulesOverAllEpochs.cancel();
+			server.runRulesOverAllEpochs.addEventListener(ResultEvent.RESULT, runRulesOverAllEpochsHandler);
+			server.runRulesOverAllEpochs.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.runRulesOverAllEpochs.send();				
+		}
+		
+		private function runRulesOverAllEpochsHandler(event:ResultEvent):void
+		{
+			dispatch(new RunRulesOverAllEpochsResultEvent());
+		}
+			
+		// ~~~~~~~~~
+		
+		public function loadSwf(vpdmfId:Number):void {
+			server.loadSwf.cancel();
+			server.loadSwf.addEventListener(ResultEvent.RESULT, loadSwfHandler);
+			server.loadSwf.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.loadSwf.send(vpdmfId);				
+		}
+		
+		private function loadSwfHandler(event:ResultEvent):void
+		{
+			var swfBytes:ByteArray = ByteArray(event.result);
+
+			var ldr:Loader = new Loader();
+			ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, initializationComplete);
+			var fldr:ForcibleLoader = new ForcibleLoader(ldr);
+			
+			fldr.loadBytes(swfBytes);
+		
+		}			
+		
+		private function initializationComplete(event:Event):void {
+			
+			var clip:MovieClip = event.target.content as MovieClip;
+			
+			dispatch(new LoadSwfResultEvent(clip));
+			
+		}
+		
+		// ~~~~~~~~~
+		
+		public function loadXml(vpdmfId:Number):void {
+			server.loadXml.cancel();
+			server.loadXml.addEventListener(ResultEvent.RESULT, loadXmlHandler);
+			server.loadXml.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.loadXml.send(vpdmfId);				
+		}
+		
+		private function loadXmlHandler(event:ResultEvent):void
+		{
+			var xml:String = String(event.result);
+			
+			dispatch(new LoadXmlResultEvent(xml));
+			
+		}		
+		
+		// ~~~~~~~~~
+		
+		public function loadPmcXml(vpdmfId:Number):void {
+			server.loadPmcXml.cancel();
+			server.loadPmcXml.addEventListener(ResultEvent.RESULT, loadPmcXmlHandler);
+			server.loadPmcXml.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.loadPmcXml.send(vpdmfId);				
+		}
+		
+		private function loadPmcXmlHandler(event:ResultEvent):void
+		{
+			var xml:String = String(event.result);
+			
+			dispatch(new LoadPmcXmlResultEvent(xml));
+			
+		}		
+		
+		// ~~~~~~~~~
+		
+		public function loadHtml(vpdmfId:Number):void {
+			server.loadHtml.cancel();
+			server.loadHtml.addEventListener(ResultEvent.RESULT, loadHtmlHandler);
+			server.loadHtml.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.loadHtml.send(vpdmfId);				
+		}
+		
+		private function loadHtmlHandler(event:ResultEvent):void
+		{
+			var html:String = String(event.result);
+			
+			dispatch(new LoadHtmlResultEvent(html));
+			
+		}		
 		
 	}
 

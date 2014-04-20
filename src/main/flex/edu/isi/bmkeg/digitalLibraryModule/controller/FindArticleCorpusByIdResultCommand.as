@@ -9,18 +9,19 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 	
 	import org.robotlegs.mvcs.Command;
 	
-	public class UpdateCorpusResultCommand extends Command
+	public class FindArticleCorpusByIdResultCommand extends Command
 	{
 		
 		[Inject]
-		public var event:UpdateCorpusResultEvent;
+		public var event:FindArticleCorpusByIdResultEvent;
 		
 		[Inject]
 		public var model:DigitalLibraryModel;
 		
+		
 		override public function execute():void
 		{	
-			this.dispatch(new FindCorpusByIdEvent(event.id));				
+			model.corpus = event.object;				
 		}
 		
 	}

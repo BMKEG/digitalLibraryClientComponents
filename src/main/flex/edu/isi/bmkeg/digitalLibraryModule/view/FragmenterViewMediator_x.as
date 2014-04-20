@@ -20,8 +20,10 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	
 	import flash.display.*;
 	import flash.events.*;
+	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.net.*;
+	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	
 	import mx.collections.*;
@@ -30,19 +32,22 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import mx.collections.errors.ItemPendingError;
 	import mx.controls.Alert;
 	import mx.controls.SWFLoader;
+	import mx.core.IFactory;
 	import mx.events.CollectionEvent;
 	import mx.graphics.*;
 	import mx.managers.PopUpManager;
+	import mx.utils.Base64Encoder;
 	import mx.utils.StringUtil;
 	
 	import org.ffilmation.utils.rtree.*;
 	import org.libspark.utils.ForcibleLoader;
+	import org.robotlegs.mvcs.Command;
 	import org.robotlegs.mvcs.Mediator;
 	
 	import spark.events.IndexChangeEvent;
 	import spark.primitives.*;
 	
-	public class FragmenterViewMediator extends Mediator
+	public class FragmenterViewMediator_x extends Mediator
 	{
 		
 		[Inject]
@@ -82,6 +87,12 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			addViewListener(ChangeFragmentType.CHANGE_FRAGMENT_TYPE, 
 				changeFragmentType);
 
+			addContextListener(LoadSwfResultEvent.LOAD_SWF_RESULT, 
+				swfFileLoadResult);
+			
+			addContextListener(LoadXmlResultEvent.LOAD_XML_RESULT, 
+				xmlFileLoadResult);
+						
 			addContextListener(
 				FindArticleCitationByIdResultEvent.FIND_ARTICLECITATIONBY_ID_RESULT, 
 				buildBitmapsFromFindByIdResult);
@@ -113,27 +124,20 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			//
 			// First, get the swf file on the server for the images
 			//
-			var url:String = "/" + Utils.getWebAppContext();
-								
-			url = Utils.getServerProt() + "/" + url + 
-				"/rest/load?swfFile=" + vpdmfId + ".swf";
-		
-			var ldr:Loader = new Loader(); 
-			ldr.contentLoaderInfo.addEventListener(Event.COMPLETE,swfFileLoadResult);  
-			var fldr:ForcibleLoader = new ForcibleLoader(ldr);
-			fldr.load(new URLRequest(url));
+			this.dispatch( new LoadSwfEvent(vpdmfId) );
 			
 			//
 			// Next, get the xml for the page boxes
 			//
-			url = "/" + Utils.getWebAppContext();
+			this.dispatch( new LoadXmlEvent(vpdmfId) );
+				
+			view.bitmaps = new ArrayCollection();
+
+		}
+		
+		private function fileLoadError(event:ErrorEvent):void {
 			
-			url = Utils.getServerProt() + "/" + url + 
-				"/rest/load?xmlFile=" + vpdmfId + ".xml";
-			
-			var urlLdr:URLLoader = new URLLoader(); 
-			urlLdr.addEventListener(Event.COMPLETE,xmlFileLoadResult);  
-			urlLdr.load(new URLRequest(url));
+			trace("Text is not available for this document: " + event);
 			
 		}
 		
@@ -153,14 +157,9 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 		}
 
-		private function swfFileLoadResult(event:Event):void {
+		private function swfFileLoadResult(event:LoadSwfResultEvent):void {
 
-			if( !event.target )
-				return;
-			
-			view.bitmaps = new ArrayCollection();
-
-			var clip:MovieClip = event.currentTarget.content as MovieClip;
+			var clip:MovieClip = event.swf;
 			
 			var frames:int = clip.totalFrames;
 			
@@ -190,12 +189,9 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 		}
 		
-		private function xmlFileLoadResult(event:Event):void {
-			
-			if( !event.target )
-				return;
-			
-			xml = XML(event.currentTarget.data);
+		private function xmlFileLoadResult(event:LoadXmlResultEvent):void {
+						
+			xml = XML(event.xml);
 			
 			//
 			// Build the spatial index of the PDF content here. 
@@ -269,6 +265,8 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				p++;
 			
 			}
+			
+			this.forceRedraw();				
 			
 		}
 
@@ -588,6 +586,16 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			model.frgType = event.fType;
 			view.frgType = event.fType;
 			
+		}
+		
+		//
+		// Force a redraw for the List control.
+		// from: http://blog.9mmedia.com/?p=709
+		//
+		private function forceRedraw():void {
+			var _itemRenderer:IFactory = this.view.pgList.itemRenderer;
+			this.view.pgList.itemRenderer = null;
+			this.view.pgList.itemRenderer = _itemRenderer;
 		}
 
 		

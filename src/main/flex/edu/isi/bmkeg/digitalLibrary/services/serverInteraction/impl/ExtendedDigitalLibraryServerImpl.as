@@ -85,12 +85,36 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction.impl
 		{
 			return getOperation("runRuleSetOnJournalEpoch");
 		}	
-		
+
+		public function get runRulesOverAllEpochs():AbstractOperation
+		{
+			return getOperation("runRulesOverAllEpochs");
+		}	
+
 		public function get generateRuleFileFromLapdf():AbstractOperation
 		{
 			return getOperation("generateRuleFileFromLapdf");
 		}	
 
+		public function get loadSwf():AbstractOperation
+		{
+			return getOperation("loadSwf");
+		}	
+		
+		public function get loadXml():AbstractOperation
+		{
+			return getOperation("loadXml");
+		}	
+		
+		public function get loadPmcXml():AbstractOperation
+		{
+			return getOperation("loadPmcXml");
+		}
+		
+		public function get loadHtml():AbstractOperation
+		{
+			return getOperation("loadHtml");
+		}	
 	}
 
 }

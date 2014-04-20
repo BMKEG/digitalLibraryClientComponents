@@ -3,13 +3,15 @@
   <includeClasses>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.controller.ListArticleDocumentResultCommand"/>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.controller.RemoveAnnotationResultCommand"/>
-    <classEntry path="edu.isi.bmkeg.digitalLibraryModule.controller.UpdateCorpusCommand"/>
+    <classEntry path="edu.isi.bmkeg.digitalLibraryModule.controller.UpdateArticleCorpusCommand"/>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.controller.UploadPdfFileCommand"/>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.model.FragmentHolder"/>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.view.FragmentSprite"/>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.view.TermItemRenderer"/>
     <classEntry path="edu.isi.bmkeg.utils.ColorPalette"/>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.view.TermSkin"/>
+    <classEntry path="edu.isi.bmkeg.utils.AVM2Loader"/>
+    <classEntry path="edu.isi.bmkeg.digitalLibrary.events.LoadHtmlEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

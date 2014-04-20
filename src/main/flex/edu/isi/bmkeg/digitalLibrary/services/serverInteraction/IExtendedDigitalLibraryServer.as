@@ -31,6 +31,17 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction
 		function get generateRuleFileFromLapdf():AbstractOperation;
 
 		function get runRuleSetOnJournalEpoch():AbstractOperation;
+
+		function get runRulesOverAllEpochs():AbstractOperation;
+
+		function get loadSwf():AbstractOperation;
+	
+		function get loadXml():AbstractOperation;
+		
+		function get loadPmcXml():AbstractOperation;
+		
+		function get loadHtml():AbstractOperation;
+		
 		
 	}
 

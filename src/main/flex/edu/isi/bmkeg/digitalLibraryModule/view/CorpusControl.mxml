@@ -50,7 +50,7 @@
 						var vpdmfId:Number = o.vpdmfId;
 						var m:Corpus = new Corpus();
 						m.vpdmfId = vpdmfId
-						this.dispatchEvent( new FindCorpusByIdEvent(vpdmfId) );
+						this.dispatchEvent( new FindArticleCorpusByIdEvent(vpdmfId) );
 					} else {
 						this.dispatchEvent( new ListArticleCitationPagedEvent(
 							new ArticleCitation_qo(), 0, 300

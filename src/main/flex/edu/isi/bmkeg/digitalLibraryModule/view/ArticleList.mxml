@@ -41,7 +41,7 @@
 			private var _documentsCollection:IList;
 			
 			private var file:FileReference;
-			public var fileFilters:String = ".pdf";
+			public var fileFilters:String = "*.pdf,*.PDF";
 			
 			[Bindable]
 			public function get documentsList():IList
@@ -125,7 +125,7 @@
 					f2 += "*." + f; 
 				}
 				
-				var fileFilter:FileFilter = new FileFilter("Files: (" + f1 + ")", f2);
+				var fileFilter:FileFilter = new FileFilter("Pdf Documents",  f2);
 				file.browse([fileFilter]);
 				
 			}

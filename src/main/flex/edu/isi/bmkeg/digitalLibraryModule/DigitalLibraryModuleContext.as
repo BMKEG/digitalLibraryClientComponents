@@ -51,9 +51,9 @@ package edu.isi.bmkeg.digitalLibraryModule
 		{		
 			
 			mediatorMap.mapView(CorpusControl, CorpusControlMediator);
-			mediatorMap.mapView(ArticleList, ArticleListMediator);
+			mediatorMap.mapView(ArticleList, ArticleListMediator_xx);
 			mediatorMap.mapView(ArticleCitationView, ArticleCitationViewMediator);
-			mediatorMap.mapView(FragmenterView, FragmenterViewMediator);
+			mediatorMap.mapView(FragmenterView, FragmenterViewMediator_x);
 			
 			// Need a bit of extra detail to deal with popups
 			mediatorMap.mapView(CorpusPopup, CorpusPopupMediator, null, false, false);
@@ -80,8 +80,10 @@ package edu.isi.bmkeg.digitalLibraryModule
 
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// load the target corpus
-			commandMap.mapEvent(FindCorpusByIdEvent.FIND_CORPUS_BY_ID, FindCorpusByIdCommand);
-			commandMap.mapEvent(FindCorpusByIdResultEvent.FIND_CORPUSBY_ID_RESULT, FindCorpusByIdResultCommand);
+			commandMap.mapEvent(FindArticleCorpusByIdEvent.FIND_ARTICLECORPUS_BY_ID, 
+					FindArticleCorpusByIdCommand);
+			commandMap.mapEvent(FindArticleCorpusByIdResultEvent.FIND_ARTICLECORPUSBY_ID_RESULT, 
+					FindArticleCorpusByIdResultCommand);
 			
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// Run a paged list query for articles in the target corpus
@@ -108,22 +110,41 @@ package edu.isi.bmkeg.digitalLibraryModule
 			commandMap.mapEvent(UploadPdfFileResultEvent.UPLOAD_PDF_FILE_RESULT, 
 					UploadPdfFileResultCommand);
 			
-			commandMap.mapEvent(InsertCorpusEvent.INSERT_CORPUS, InsertCorpusCommand);
-			commandMap.mapEvent(InsertCorpusResultEvent.INSERT_CORPUS_RESULT, 
-					InsertCorpusResultCommand);
+			commandMap.mapEvent(InsertArticleCorpusEvent.INSERT_ARTICLECORPUS, InsertArticleCorpusCommand);
+			commandMap.mapEvent(InsertArticleCorpusResultEvent.INSERT_ARTICLECORPUS_RESULT, 
+					InsertArticleCorpusResultCommand);
 			
-			commandMap.mapEvent(UpdateCorpusEvent.UPDATE_CORPUS, UpdateCorpusCommand);
-			commandMap.mapEvent(UpdateCorpusResultEvent.UPDATE_CORPUS_RESULT, 
-					UpdateCorpusResultCommand);
+			commandMap.mapEvent(UpdateArticleCorpusEvent.UPDATE_ARTICLECORPUS, UpdateArticleCorpusCommand);
+			commandMap.mapEvent(UpdateArticleCorpusResultEvent.UPDATE_ARTICLECORPUS_RESULT, 
+					UpdateArticleCorpusResultCommand);
 								
 			commandMap.mapEvent(DeleteCorpusByIdEvent.DELETE_CORPUS_BY_ID, 
 				DeleteCorpusByIdCommand);
 			commandMap.mapEvent(DeleteCorpusByIdResultEvent.DELETE_CORPUS_BY_ID_RESULT, 
 				DeleteCorpusByIdResultCommand);
+
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// Load the swf
+			commandMap.mapEvent(LoadSwfEvent.LOAD_SWF, LoadSwfCommand);
+			commandMap.mapEvent(LoadSwfResultEvent.LOAD_SWF_RESULT, LoadSwfResultCommand);
+
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// Load the xml
+			commandMap.mapEvent(LoadXmlEvent.LOAD_XML, LoadXmlCommand);
+			commandMap.mapEvent(LoadXmlResultEvent.LOAD_XML_RESULT, LoadXmlResultCommand);
+
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// Load the pmcxml
+			commandMap.mapEvent(LoadPmcXmlEvent.LOAD_PMCXML, LoadPmcXmlCommand);
+			commandMap.mapEvent(LoadPmcXmlResultEvent.LOAD_PMCXML_RESULT, LoadPmcXmlResultCommand);
+
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// Load the html
+			commandMap.mapEvent(LoadHtmlEvent.LOAD_HTML, LoadHtmlCommand);
+			commandMap.mapEvent(LoadHtmlResultEvent.LOAD_HTML_RESULT, LoadHtmlResultCommand);
+			
 			
 			commandMap.mapEvent(ClearCorpusEvent.CLEAR_CORPUS, ClearCorpusCommand);
-			commandMap.mapEvent(LoadingPdfSwfCompleteEvent.LOADING_PDF_SWF_COMPLETE, 
-				LoadingPdfSwfCompleteCommand);
 			
 			commandMap.mapEvent(AddArticleCitationToCorpusEvent.ADD_ARTICLE_CITATION_TO_CORPUS, 
 				AddArticleCitationToCorpusCommand);
