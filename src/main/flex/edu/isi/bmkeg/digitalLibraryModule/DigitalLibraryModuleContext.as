@@ -53,7 +53,7 @@ package edu.isi.bmkeg.digitalLibraryModule
 			mediatorMap.mapView(CorpusControl, CorpusControlMediator);
 			mediatorMap.mapView(ArticleList, ArticleListMediator_xx);
 			mediatorMap.mapView(ArticleCitationView, ArticleCitationViewMediator);
-			mediatorMap.mapView(FragmenterView, FragmenterViewMediator_x);
+			mediatorMap.mapView(FragmenterView1, FragmenterViewMediator);
 			
 			// Need a bit of extra detail to deal with popups
 			mediatorMap.mapView(CorpusPopup, CorpusPopupMediator, null, false, false);
@@ -143,7 +143,6 @@ package edu.isi.bmkeg.digitalLibraryModule
 			commandMap.mapEvent(LoadHtmlEvent.LOAD_HTML, LoadHtmlCommand);
 			commandMap.mapEvent(LoadHtmlResultEvent.LOAD_HTML_RESULT, LoadHtmlResultCommand);
 			
-			
 			commandMap.mapEvent(ClearCorpusEvent.CLEAR_CORPUS, ClearCorpusCommand);
 			
 			commandMap.mapEvent(AddArticleCitationToCorpusEvent.ADD_ARTICLE_CITATION_TO_CORPUS, 
@@ -166,6 +165,11 @@ package edu.isi.bmkeg.digitalLibraryModule
 			commandMap.mapEvent(InsertFTDFragmentResultEvent.INSERT_FTDFRAGMENT_RESULT, 
 				InsertFTDFragmentResultCommand);
 
+			commandMap.mapEvent(UpdateFTDFragmentEvent.UPDATE_FTDFRAGMENT, 
+				UpdateFTDFragmentCommand);
+			commandMap.mapEvent(UpdateFTDFragmentResultEvent.UPDATE_FTDFRAGMENT_RESULT, 
+				UpdateFTDFragmentResultCommand);
+			
 			commandMap.mapEvent(ListFTDFragmentEvent.LIST_FTDFRAGMENT, 
 				ListFTDFragmentCommand);
 			commandMap.mapEvent(ListFTDFragmentResultEvent.LIST_FTDFRAGMENT_RESULT, 
@@ -176,6 +180,10 @@ package edu.isi.bmkeg.digitalLibraryModule
 			commandMap.mapEvent(RemoveAnnotationResultEvent.REMOVE_ANNOTATION_RESULT, 
 				RemoveAnnotationResultCommand);
 
+			commandMap.mapEvent(DumpFragmentsToBratEvent.DUMP_FRAGMENTS_TO_BRAT,
+				DumpFragmentsToBratCommand);
+
+			
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// Term-based functions. 
 			commandMap.mapEvent(ListTermViewsEvent.LIST_TERM_VIEWS, ListTermViewsCommand);

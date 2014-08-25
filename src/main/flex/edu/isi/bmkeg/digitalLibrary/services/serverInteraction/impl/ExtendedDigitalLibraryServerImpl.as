@@ -115,6 +115,17 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction.impl
 		{
 			return getOperation("loadHtml");
 		}	
+		
+		public function get listArticleCitationPaged():AbstractOperation
+		{
+			return getOperation("listArticleCitationPaged");
+		}	
+		
+		public function get dumpFragmentsToBrat():AbstractOperation
+		{
+			return getOperation("dumpFragmentsToBrat");
+		}	
+		
 	}
 
 }

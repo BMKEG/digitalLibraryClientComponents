@@ -42,6 +42,8 @@
 			
 			private var file:FileReference;
 			public var fileFilters:String = "*.pdf,*.PDF";
+
+			private var itemRendererClassFactory:ClassFactory;
 			
 			[Bindable]
 			public function get documentsList():IList
@@ -75,7 +77,7 @@
 						"ArticleCitation_6" : "0000-9999",
 						"ArticleCitation_7" : "12345678"
 				};
-							
+				
 			}
 							
 			public function clearSelection():void {
@@ -169,6 +171,7 @@
 				dispatchEvent(new FullyDeleteArticleEvent(o.vpdmfId));	
 			}
 			
+			
 		]]>
 	</fx:Script>
 	<s:Label top="10"  fontSize="16" fontWeight="bold"
@@ -187,6 +190,9 @@
 							  dataTipFunction="popupFormatter"
 							  showDataTips="true"
 							  width="100"/>
+				<s:GridColumn headerText="Files" 
+							  itemRenderer="edu.isi.bmkeg.digitalLibraryModule.view.ArticleList__FileTypeItemRenderer"
+							  width="90"/>
 				<s:GridColumn headerText="Authors" 
 							  dataField="ArticleCitation_1"
 							  dataTipFunction="popupFormatter"

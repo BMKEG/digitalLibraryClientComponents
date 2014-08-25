@@ -42,7 +42,10 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction
 		
 		function get loadHtml():AbstractOperation;
 		
-		
+		function get listArticleCitationPaged():AbstractOperation;
+
+		function get dumpFragmentsToBrat():AbstractOperation;
+
 	}
 
 }

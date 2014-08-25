@@ -87,8 +87,8 @@
 				<s:VerticalLayout/>
 			</s:layout>
 			<s:Label top="10" fontSize="16" fontWeight="bold"
-					 horizontalCenter="0" text="Fragments"/>
-			<view:FragmenterView width="100%" height="100%"/>									
+					 horizontalCenter="0" text="Full Text + Annotations"/>
+			<view:FragmenterView1 width="100%" height="100%"/>									
 		</s:Group>
 	</mx:HDividedBox>
 	

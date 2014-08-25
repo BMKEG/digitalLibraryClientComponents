@@ -25,6 +25,9 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import flash.net.*;
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
+	import flash.xml.XMLNode;
+	
+	import flashx.textLayout.conversion.TextConverter;
 	
 	import mx.collections.*;
 	import mx.collections.ArrayCollection;
@@ -47,11 +50,11 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import spark.events.IndexChangeEvent;
 	import spark.primitives.*;
 	
-	public class FragmenterViewMediator_x extends Mediator
+	public class FragmenterViewMediator extends Mediator
 	{
 		
 		[Inject]
-		public var view:FragmenterView;
+		public var view:FragmenterView1;
 		
 		[Inject]
 		public var model:DigitalLibraryModel;
@@ -92,7 +95,13 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 			addContextListener(LoadXmlResultEvent.LOAD_XML_RESULT, 
 				xmlFileLoadResult);
-						
+				
+			addContextListener(LoadHtmlResultEvent.LOAD_HTML_RESULT, 
+				loadHtmlResult);
+			
+			addViewListener(RetrievePmcHtmlEvent.RETRIEVE_PMC_HTML, 
+				dispatchLoadHtml);
+			
 			addContextListener(
 				FindArticleCitationByIdResultEvent.FIND_ARTICLECITATIONBY_ID_RESULT, 
 				buildBitmapsFromFindByIdResult);
@@ -104,6 +113,10 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			addContextListener(
 				ListTermViewsResultEvent.LIST_TERM_VIEWS_RESULT, 
 				updateTerms);
+		
+			addViewListener(
+				DumpFragmentsToBratEvent.DUMP_FRAGMENTS_TO_BRAT, 
+				dumpFragments);
 			
 			this.dispatch( new ListTermViewsEvent() );
 			
@@ -141,16 +154,16 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 		}
 		
-		private function readFragmentHolder(pMinusOne:int):FragmentHolder {
+		private function readFragmentHolder(pMinusOne:int):FragmentHolderForPage {
 			
-			var fh:FragmentHolder;
+			var fh:FragmentHolderForPage;
 			
 			if( view.bitmaps.length <= pMinusOne ) {
-				fh = new FragmentHolder(model.pdfScale);
+				fh = new FragmentHolderForPage(model.pdfScale);
 				fh.page = pMinusOne + 1;
 				view.bitmaps.addItem(fh);
 			} else {
-				fh = FragmentHolder(view.bitmaps.getItemAt(pMinusOne));
+				fh = FragmentHolderForPage(view.bitmaps.getItemAt(pMinusOne));
 			}
 			
 			return fh;
@@ -173,7 +186,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				mat.scale(model.pdfScale,model.pdfScale);
 
 				bitmapData.draw(clip, mat);
-				var o:FragmentHolder = readFragmentHolder(i-1);			
+				var o:FragmentHolderForPage = readFragmentHolder(i-1);			
 				o.image = new Bitmap(bitmapData);
 			}
 			
@@ -208,7 +221,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				var words:ArrayCollection = new ArrayCollection();
 				model.indexedWordsByPage.addItemAt(words,p);
 		
-				var fh:FragmentHolder = readFragmentHolder(p);
+				var fh:FragmentHolderForPage = readFragmentHolder(p);
 				fh.extraRectangles = new ArrayCollection();
 				
 				if(this.drawPagesFlag) {
@@ -330,7 +343,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			// the starting block
 			//
 			var dataArray:ArrayCollection = view.bitmaps;
-			var data:FragmentHolder = FragmentHolder(dataArray.getItemAt(event.p-1));	
+			var data:FragmentHolderForPage = FragmentHolderForPage(dataArray.getItemAt(event.p-1));	
 			if( startId > trackedId || 
 					Number(trackedWordXml.@x) < chunkX ||
 					Number(trackedWordXml.@x) > (chunkX + chunkW) ) {
@@ -420,7 +433,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			var chunkX:Number = Number(this.startChunkXml.@x);
 			
 			var dataArray:ArrayCollection = view.bitmaps;
-			var fh:FragmentHolder = FragmentHolder(dataArray.getItemAt(event.p-1));
+			var fh:FragmentHolderForPage = FragmentHolderForPage(dataArray.getItemAt(event.p-1));
 			var finishX:Number = Number(this.finishWordXml.@x);
 			if( id1 > id2 || finishX < chunkX || finishX > (chunkX + chunkW) ) {
 				fh.fragmentInProgress = null;
@@ -440,12 +453,31 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 			var ftd:FTD = model.lightFtd;
 
-			var frg:FTDFragment = new FTDFragment();			
+			//
+			// Is this a new fragment or does it already exist in the system?
+			//
+			var frgOrd:int = Number(view.frgNumberInput.text);
+			var frg:FTDFragment = null;
+			for( var iii:int=0; iii<this.model.fragments.length; iii++) {
+				var tempFrg:FTDFragment = FTDFragment(this.model.fragments.getItemAt(iii));
+				if( tempFrg.frgOrder == frgOrd )  {
+					frg = tempFrg;
+					break;
+				}
+			}
+			var newFrg:Boolean = false;
+			if( frg == null ) {
+				frg = new FTDFragment();
+				frg.frgOrder = frgOrd
+				frg.ftd = ftd;
+				frg.frgType = model.frgType;
+				newFrg = true;
+			}
+
 			var ftdAnn:FTDFragmentBlock = new FTDFragmentBlock();
 			frg.annotations.addItem(ftdAnn);
-			frg.ftd = ftd;
-			frg.frgType = model.frgType;
-			
+			frg.frgType = view.frgType;
+						
 			ftdAnn.x1 = x1;
 			ftdAnn.y1 = y1;
 			ftdAnn.x2 = x2;
@@ -465,7 +497,10 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				annStr = annStr.substr(0, annStr.length-1);
 			ftdAnn.text = annStr;
 			
-			this.dispatch( new InsertFTDFragmentEvent( frg ) );
+			if( newFrg ) 
+				this.dispatch( new InsertFTDFragmentEvent( frg ) );
+			else 
+				this.dispatch( new UpdateFTDFragmentEvent( frg ) );
 			
 			this.startWordXml = null;
 			this.startChunkXml = null;
@@ -476,53 +511,49 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		
 		private function updateFragments(event:ListFTDFragmentResultEvent):void {
 			
-			var dataArray:ArrayCollection = view.bitmaps;
+			var pageArray:ArrayCollection = view.bitmaps;
 			
 			var l:ArrayCollection = new ArrayCollection();
 			var holder:Object = new Object();
-			for each(var lvi:LightViewInstance in event.list) {
+			
+			view.xmlRoot = <root/>;
+			
+			for each(var frg:FTDFragment in model.fragments) {
 				
-				var o:Object = lvi.convertToIndexTupleObject();
-						
-				var frg:FTDFragment = new FTDFragment();			
-				var ftdAnn:FTDFragmentBlock = new FTDFragmentBlock();
-				frg.annotations.addItem(ftdAnn);
 				frg.ftd = model.lightFtd;
+
+				var label:String = "";
 				
-				frg.vpdmfId = lvi.vpdmfId;
-				frg.text = o['FTDFragment_1'];
-				ftdAnn.text = o['FTDFragment_3'];
-				ftdAnn.x1 = Number( o['FTDFragment_4'] );
-				ftdAnn.y1 = Number( o['FTDFragment_5'] );
-				ftdAnn.x2 = Number( o['FTDFragment_6'] );
-				ftdAnn.y2 = Number( o['FTDFragment_7'] );
-				ftdAnn.x3 = Number( o['FTDFragment_8'] );
-				ftdAnn.y3 = Number( o['FTDFragment_9'] );
-				ftdAnn.x4 = Number( o['FTDFragment_10'] );
-				ftdAnn.y4 = Number( o['FTDFragment_11'] );
-				ftdAnn.p = Number( o['FTDFragment_12'] );
-				frg.frgType = o['FTDFragment_13'];
+				for(var i:int=0; i<frg.annotations.length; i++) {
+					var ftdAnn:FTDFragmentBlock = FTDFragmentBlock(frg.annotations.getItemAt(i));
+					
+					label += ftdAnn.text;
+										
+					if( holder[ftdAnn.p] == null )
+						holder[ftdAnn.p] = new ArrayCollection();
+
+					ArrayCollection(holder[ftdAnn.p]).addItem(ftdAnn);				
 				
-				if( holder[ftdAnn.p] == null )
-					holder[ftdAnn.p] = new ArrayCollection();
+				}	
 				
-				ArrayCollection(holder[ftdAnn.p]).addItem(frg);				
+				var frgNode:XML = <node data={frg.frgOrder} label={frg.frgOrder + ":" + label}/>;				
+				view.xmlRoot.appendChild( frgNode );
 
 			}
 
-			for each (var frgH:FragmentHolder in dataArray ) {
+			for each (var frgH:FragmentHolderForPage in pageArray ) {
 				frgH.fragmentsAdded = new ArrayCollection();	
 				frgH.fragmentInProgress = null;
 			}
 			
 			for (var pStr:* in holder ) {
 				var p:Number = Number(pStr);
-				var fh:FragmentHolder = FragmentHolder(dataArray.getItemAt(p-1));
+				var fh:FragmentHolderForPage = FragmentHolderForPage(pageArray.getItemAt(p-1));
 				fh.fragmentsAdded = holder[p];
 			}			
 			
 			this.updateRunningCounts();
-			
+
 		}
 		
 		private function removeAnnotation(event:RemoveAnnotationEvent):void {
@@ -530,7 +561,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			var p:int = event.ftdAnn.p-1;
 			
 			var dataArray:ArrayCollection = view.bitmaps;
-			var fh:FragmentHolder = FragmentHolder(dataArray.getItemAt(p));	
+			var fh:FragmentHolderForPage = FragmentHolderForPage(dataArray.getItemAt(p));	
 			var ftdAnn:FTDFragmentBlock = event.ftdAnn;
 
 			for( var i:int=0; i<fh.fragmentsAdded.length; i++ ) {
@@ -560,7 +591,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			var dataArray:ArrayCollection = view.bitmaps;
 			var runningCount:int = 0;
 			for(var i:int=0; i<dataArray.length; i++) {
-				var fh:FragmentHolder = FragmentHolder(dataArray.getItemAt(i));	
+				var fh:FragmentHolderForPage = FragmentHolderForPage(dataArray.getItemAt(i));	
 				fh.runningCount = runningCount;
 				runningCount += fh.fragmentsAdded.length;
 			}
@@ -580,7 +611,33 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			}
 					
 		}
+		
+		private function dumpFragments(event:DumpFragmentsToBratEvent):void {
+			
+			event.ftdId = model.lightFtd.vpdmfId;
+			this.dispatch( event );
+			
+		}
+		
+		private function loadHtmlResult(event:Event):void {
+			
+			var htmlString:String = model.html;
+			
+			if( htmlString != null && view.textControl != null) {
+				view.textControl.textFlow = TextConverter.importToFlow(
+					htmlString, TextConverter.TEXT_FIELD_HTML_FORMAT);
+			}
+			
+		}
+		
+		private function dispatchLoadHtml(event:Event):void {
+			
+			var vpdmfId:Number = model.citation.vpdmfId;
 
+			this.dispatch(new LoadHtmlEvent(vpdmfId) ); 
+						
+		}
+		
 		private function changeFragmentType(event:ChangeFragmentType):void {
 			
 			model.frgType = event.fType;
@@ -597,7 +654,6 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			this.view.pgList.itemRenderer = null;
 			this.view.pgList.itemRenderer = _itemRenderer;
 		}
-
 		
 	}
 

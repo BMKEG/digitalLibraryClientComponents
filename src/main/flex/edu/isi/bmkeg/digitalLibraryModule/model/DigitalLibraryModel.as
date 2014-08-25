@@ -41,7 +41,7 @@ package edu.isi.bmkeg.digitalLibraryModule.model
 		
 		// the SWF of the PDF file
 		public var swf:MovieClip;
-		
+
 		// An array of adapted org.ffilmation.utils.rtree.fRTree objects 
 		public var rTreeArray:ArrayCollection = new ArrayCollection();
 		
@@ -51,6 +51,9 @@ package edu.isi.bmkeg.digitalLibraryModule.model
 		// The fragmenter renders each page as a bitmap. This is the scaling factor 
 		// used to mitigate pixelation so that the pages look OK in the interface.
 		public var pdfScale:Number = 2.0;
+
+		// The text of the current Full Text Document expressed as HTML.
+		public var html:String;
 
 		// All fragments loaded from the current document
 		public var fragments:ArrayCollection = new ArrayCollection();

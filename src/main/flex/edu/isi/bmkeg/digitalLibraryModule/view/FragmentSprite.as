@@ -11,18 +11,20 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		public var ftdAnn:FTDFragmentBlock;
 		public var sf:Number;
 		public var frgId:int;
+		public var blkId:int;
 		
 		public var dismissControl:Sprite;
 		
 		public var idControl:Sprite;
 		
 		
-		public function FragmentSprite(id:int, ftdAnn:FTDFragmentBlock, sf:Number, fill:uint=0xffff00)
+		public function FragmentSprite(frgId:int, blkId:int, ftdAnn:FTDFragmentBlock, sf:Number, fill:uint=0xffff00)
 		{
 			super();
 			this.ftdAnn = ftdAnn;
 			this.sf = sf;
-			this.frgId = id;
+			this.frgId = frgId;
+			this.blkId = blkId;
 			
 			this.graphics.lineStyle(1, 0xff0000, 0.2)
 			this.graphics.moveTo(ftdAnn.x1 * sf,ftdAnn.y1 * sf);
@@ -53,7 +55,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			}
 			this.graphics.endFill();
 			
-			this.idControl = this.generateIdControl(this.frgId);
+			this.idControl = this.generateIdControl(this.frgId, this.blkId);
 			this.addChild(this.idControl);
 			
 		}
@@ -81,9 +83,8 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 		}
 		
-		public function generateIdControl(id:int):Sprite {
+		public function generateIdControl(frgId:int, blkId:int):Sprite {
 
-			
 			var idControl:Sprite = new Sprite();
 			
 			var t:TextField = new TextField();
@@ -92,7 +93,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			tf.size = 10; 
 			tf.font = "Courier"; 
 			t.setTextFormat(tf);
-			var s:String = String(id);
+			var s:String = String(frgId + "." + (blkId+1) );
 			t.text = s;
 			t.textColor = 0xff0000;			
 			t.height = t.textHeight + 4;

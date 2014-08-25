@@ -6,7 +6,7 @@ package edu.isi.bmkeg.digitalLibraryModule.model
 	
 	import spark.primitives.*;
 
-	public class FragmentHolder extends Object
+	public class FragmentHolderForPage extends Object
 	{
 
 		[Bindable]
@@ -30,7 +30,7 @@ package edu.isi.bmkeg.digitalLibraryModule.model
 		[Bindable]
 		public var fragmentsAdded:ArrayCollection = new ArrayCollection();
 		
-		public function FragmentHolder(pdfScale:Number)
+		public function FragmentHolderForPage(pdfScale:Number)
 		{
 			super();
 			this.pdfScale = pdfScale;

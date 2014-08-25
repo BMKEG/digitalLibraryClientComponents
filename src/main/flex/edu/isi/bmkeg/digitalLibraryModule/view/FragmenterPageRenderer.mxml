@@ -22,7 +22,7 @@
 	<fx:Script>
 		<![CDATA[
 			import edu.isi.bmkeg.digitalLibrary.events.*;
-			import edu.isi.bmkeg.digitalLibraryModule.model.FragmentHolder;
+			import edu.isi.bmkeg.digitalLibraryModule.model.FragmentHolderForPage;
 			import edu.isi.bmkeg.ftd.model.*;
 			import edu.isi.bmkeg.utils.ColorPalette;
 			
@@ -131,17 +131,17 @@
 				//
 				var fillColor:uint = 0xffff00;
 				var frgPageList:spark.components.List = spark.components.List(this.owner);
-				var fragmenter:FragmenterView = FragmenterView(frgPageList.owner);
-				if( fragmenter.frgType != null && fragmenter.frgType.length > 0 ) {
+				var fragmenter:FragmenterView1 = FragmenterView1(frgPageList.owner);
+				/*if( fragmenter.frgType != null && fragmenter.frgType.length > 0 ) {
 					fillColor = fragmenter.colorLookup[fragmenter.frgType];
-				} 
+				}*/
 				var fill:SolidColor = new SolidColor(fillColor, 0.2);
 				
 				//
 				// Then get the data for this page (since this is being reused to 
 				// process each page sequentially).
 				//
-				var fh:FragmentHolder = FragmentHolder(data);
+				var fh:FragmentHolderForPage = FragmentHolderForPage(data);
 				
 				if( fh.fragmentInProgress != null ) {
 					addElement( fh.fragmentInProgress );
@@ -159,28 +159,29 @@
 				fh.fragmentsAdded.refresh();
 				
 				for( var i:int=0; i<fh.fragmentsAdded.length; i++ ) {
-					var frg:FTDFragment = FTDFragment ( fh.fragmentsAdded.getItemAt(i) );
-
+					var ftdAnn:FTDFragmentBlock = FTDFragmentBlock( fh.fragmentsAdded.getItemAt(i) );
+					var frg:FTDFragment = ftdAnn.fragment;
+					var blkIdx:int = -1;
+					for(var j:int=0; j<frg.annotations.length; j++) {
+						var temp:FTDFragmentBlock = FTDFragmentBlock( frg.annotations.getItemAt(j) )
+						if( temp == ftdAnn ) {
+							blkIdx = j;
+							break;
+						}	
+					}
+					
 					var tempColor:uint = 0xffff00;
-					if( fragmenter.colorLookup[frg.frgType] != null ) {
-						tempColor = fragmenter.colorLookup[frg.frgType];
-					} else {
-						var pause:int = 0;
-					}
 
-					for each(var ftdAnn:FTDFragmentBlock in frg.annotations) {		
-						
-						if( ftdAnn.p != fh.page ) {
-							continue;
-						}
-						
-						var frgSprite:FragmentSprite = new FragmentSprite( 
-							fh.runningCount+i+1, ftdAnn, sf * fh.pdfScale, tempColor);
-						this.container.addChild(frgSprite);
-						this.addedAnnotations.addItem(frgSprite);
-						frgSprite.addEventListener(MouseEvent.ROLL_OVER, onFragmentHover);
-						frgSprite.addEventListener(MouseEvent.ROLL_OUT, onFragmentOut);
+					if( ftdAnn.p != fh.page ) {
+						continue;
 					}
+						
+					var frgSprite:FragmentSprite = new FragmentSprite( 
+						frg.frgOrder, blkIdx, ftdAnn, sf * fh.pdfScale, tempColor);
+					this.container.addChild(frgSprite);
+					this.addedAnnotations.addItem(frgSprite);
+					frgSprite.addEventListener(MouseEvent.ROLL_OVER, onFragmentHover);
+					frgSprite.addEventListener(MouseEvent.ROLL_OUT, onFragmentOut);
 					
 				}
 				
@@ -191,8 +192,6 @@
 					
 					var st:SolidColorStroke = new SolidColorStroke();
 					st.color = 0xff0000;	
-					var frgPageList:spark.components.List = spark.components.List(this.owner);
-					var fragmenter:FragmenterView = FragmenterView(frgPageList.owner);
 					st.alpha = .2;
 					
 					var sf2:Number = this.imgWidth / bitmap.width * 2.0;
@@ -259,10 +258,10 @@
 			 horizontalAlign="left"
 		  	 verticalAlign="top"
 			 smooth="true"
-				   smoothingQuality="high"
-				   source="{data.image}"
-				   mouseDown="image1_mouseDownHandler(event)"
- 				   mouseUp="image1_mouseUpHandler(event)"
-				   mouseMove="image1_mouseMoveHandler(event)"/>
+			 smoothingQuality="high"
+			 source="{data.image}"
+			 mouseDown="image1_mouseDownHandler(event)"
+ 			 mouseUp="image1_mouseUpHandler(event)"
+			 mouseMove="image1_mouseMoveHandler(event)"/>
 	
 </s:ItemRenderer>

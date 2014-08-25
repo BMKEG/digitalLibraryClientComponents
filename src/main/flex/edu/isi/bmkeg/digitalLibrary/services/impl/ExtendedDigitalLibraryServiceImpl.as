@@ -4,8 +4,10 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 	import edu.isi.bmkeg.digitalLibrary.events.*;
 	import edu.isi.bmkeg.utils.*;
 	import edu.isi.bmkeg.digitalLibrary.model.citations.*;
+	import edu.isi.bmkeg.digitalLibrary.model.qo.citations.ArticleCitation_qo;
 	import edu.isi.bmkeg.digitalLibrary.services.*;
 	import edu.isi.bmkeg.digitalLibrary.services.serverInteraction.*;
+	import edu.isi.bmkeg.digitalLibrary.rl.events.ListArticleCitationPagedResultEvent;
 	import edu.isi.bmkeg.ftd.model.*;
 	import edu.isi.bmkeg.utils.dao.*;
 	
@@ -26,8 +28,8 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 	import mx.rpc.events.ResultEvent;
 	
 	import org.robotlegs.mvcs.Actor;
-	import org.libspark.utils.ForcibleLoader;
-
+	import org.libspark.utils.ForcibleLoader; 
+	
 	public class ExtendedDigitalLibraryServiceImpl extends Actor implements IExtendedDigitalLibraryService {
 
 		private var _server:IExtendedDigitalLibraryServer;
@@ -348,6 +350,43 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			dispatch(new LoadHtmlResultEvent(html));
 			
 		}		
+
+		// ~~~~~~~~~
+		
+		public function listArticleCitationPaged(object:ArticleCitation_qo, offset:int, cnt:int):void {
+			server.listArticleCitationPaged.cancel();
+			var token:AsyncToken = server.listArticleCitationPaged.send(object, offset, cnt);
+			var synRes:AsyncResponder = new AsyncResponder(
+				listArticleCitationPagedResultHandler,
+				asyncResponderFailHandler,
+				{offset:offset});
+			token.addResponder(synRes);
+		}
+		
+		private function listArticleCitationPagedResultHandler(event:ResultEvent, token:Object):void
+		{
+			var list:ArrayCollection = event.result as ArrayCollection;
+			var offset:int = int(token.offset);
+			dispatch(new ListArticleCitationPagedResultEvent(list, offset));
+		}
+
+		// ~~~~~~~~~
+		
+		public function dumpFragmentsToBrat(ftdId:Number):void  {
+			server.dumpFragmentsToBrat.cancel();
+			server.dumpFragmentsToBrat.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.dumpFragmentsToBrat.addEventListener(ResultEvent.RESULT, dumpFragmentsToBratHandler);
+			server.dumpFragmentsToBrat.send(ftdId);				
+		}
+
+		private function dumpFragmentsToBratHandler(event:ResultEvent):void
+		{
+			// External link to spawn off a new panel to this address. 
+			var url:URLRequest = new URLRequest("http://localhost:8001/index.xhtml#/" + event.result);
+			navigateToURL(url,"_blank");
+			
+		}
+
 		
 	}
 

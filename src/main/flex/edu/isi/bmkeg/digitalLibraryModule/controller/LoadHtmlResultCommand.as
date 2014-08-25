@@ -25,7 +25,7 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 
 		override public function execute():void
 		{
-			//model.swf = event.swf;
+			model.html = event.html;
 		}
 		
 	}

@@ -1,6 +1,7 @@
 package edu.isi.bmkeg.digitalLibrary.services
 {
 
+	import edu.isi.bmkeg.digitalLibrary.model.qo.citations.ArticleCitation_qo;
 	import edu.isi.bmkeg.ftd.model.*;
 	
 	import mx.collections.ArrayCollection;
@@ -49,6 +50,11 @@ package edu.isi.bmkeg.digitalLibrary.services
 		function loadPmcXml(vpdmfId:Number):void;
 
 		function loadHtml(vpdmfId:Number):void;
+
+		function listArticleCitationPaged(o:ArticleCitation_qo, offset:int, cnt:int):void;
+			
+		function dumpFragmentsToBrat(ftdId:Number):void;
+		
 		
 	}
 

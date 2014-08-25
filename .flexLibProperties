@@ -5,7 +5,6 @@
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.controller.RemoveAnnotationResultCommand"/>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.controller.UpdateArticleCorpusCommand"/>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.controller.UploadPdfFileCommand"/>
-    <classEntry path="edu.isi.bmkeg.digitalLibraryModule.model.FragmentHolder"/>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.view.FragmentSprite"/>
     <classEntry path="edu.isi.bmkeg.digitalLibraryModule.view.TermItemRenderer"/>
     <classEntry path="edu.isi.bmkeg.utils.ColorPalette"/>

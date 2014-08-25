@@ -12,6 +12,7 @@
 			
 			import edu.isi.bmkeg.utils.ColorPalette;
 			
+			import spark.components.HGroup;
 			import mx.collections.ArrayCollection;
 			import mx.controls.List;
 			import mx.events.ColorPickerEvent;
@@ -46,7 +47,8 @@
 				
 				var frgTermList:List = List(this.owner);
 				var ac:AutoComplete = AutoComplete(frgTermList.owner);
-				var fragmenter:FragmenterView = FragmenterView(ac.owner);
+				var hg:HGroup = HGroup(ac.owner);
+				var fragmenter:FragmenterView1 = FragmenterView1(hg.owner);
 				var color:uint = fragmenter.colorLookup[value.tree];
 				var c:String = "#" + String(color).substr(2);
 				colorBox.setStyle( "backgroundColor", c );
