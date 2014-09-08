@@ -387,7 +387,21 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			
 		}
 
+		// ~~~~~~~~~
 		
+		public function retrieveFragmentTree():void  {
+			server.retrieveFragmentTree.cancel();
+			server.retrieveFragmentTree.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.retrieveFragmentTree.addEventListener(ResultEvent.RESULT, retrieveFragmentTreeHandler);
+			server.retrieveFragmentTree.send();				
+		}
+		
+		private function retrieveFragmentTreeHandler(event:ResultEvent):void
+		{
+			var tree:XML = event.result as XML;
+			dispatch(new RetrieveFragmentTreeResultEvent(tree));
+		}
+	
 	}
 
 }

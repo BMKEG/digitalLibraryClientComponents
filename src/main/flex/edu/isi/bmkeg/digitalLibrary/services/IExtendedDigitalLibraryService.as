@@ -54,7 +54,9 @@ package edu.isi.bmkeg.digitalLibrary.services
 		function listArticleCitationPaged(o:ArticleCitation_qo, offset:int, cnt:int):void;
 			
 		function dumpFragmentsToBrat(ftdId:Number):void;
-		
+
+		function retrieveFragmentTree():void;
+
 		
 	}
 

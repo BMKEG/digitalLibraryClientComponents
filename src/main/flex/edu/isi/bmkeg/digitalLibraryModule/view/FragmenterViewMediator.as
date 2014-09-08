@@ -456,7 +456,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			//
 			// Is this a new fragment or does it already exist in the system?
 			//
-			var frgOrd:int = Number(view.frgNumberInput.text);
+			var frgOrd:String = view.frgNumberInput.text;
 			var frg:FTDFragment = null;
 			for( var iii:int=0; iii<this.model.fragments.length; iii++) {
 				var tempFrg:FTDFragment = FTDFragment(this.model.fragments.getItemAt(iii));

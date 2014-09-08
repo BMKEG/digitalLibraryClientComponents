@@ -125,7 +125,11 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction.impl
 		{
 			return getOperation("dumpFragmentsToBrat");
 		}	
-		
+
+		public function get retrieveFragmentTree():AbstractOperation
+		{
+			return getOperation("retrieveFragmentTree");
+		}
 	}
 
 }

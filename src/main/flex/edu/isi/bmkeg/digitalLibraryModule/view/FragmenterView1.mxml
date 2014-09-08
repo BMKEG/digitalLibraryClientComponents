@@ -74,7 +74,7 @@
 			public var frgType:String;
 
 			[Bindable] 
-			public var frgNumber:int=1;
+			public var frgNumber:String = "01";
 
 			[Bindable] 
 			public var xmlRoot:XML = <root/>;

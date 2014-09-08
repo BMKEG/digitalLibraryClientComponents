@@ -46,6 +46,8 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction
 
 		function get dumpFragmentsToBrat():AbstractOperation;
 
+		function get retrieveFragmentTree():AbstractOperation;
+		
 	}
 
 }

@@ -10,7 +10,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		
 		public var ftdAnn:FTDFragmentBlock;
 		public var sf:Number;
-		public var frgId:int;
+		public var frgId:String;
 		public var blkId:int;
 		
 		public var dismissControl:Sprite;
@@ -18,7 +18,11 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		public var idControl:Sprite;
 		
 		
-		public function FragmentSprite(frgId:int, blkId:int, ftdAnn:FTDFragmentBlock, sf:Number, fill:uint=0xffff00)
+		public function FragmentSprite(frgId:String, 
+									   blkId:int, 
+									   ftdAnn:FTDFragmentBlock, 
+									   sf:Number, 
+									   fill:uint=0xffff00)
 		{
 			super();
 			this.ftdAnn = ftdAnn;
@@ -83,7 +87,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 		}
 		
-		public function generateIdControl(frgId:int, blkId:int):Sprite {
+		public function generateIdControl(frgId:String, blkId:int):Sprite {
 
 			var idControl:Sprite = new Sprite();
 			
