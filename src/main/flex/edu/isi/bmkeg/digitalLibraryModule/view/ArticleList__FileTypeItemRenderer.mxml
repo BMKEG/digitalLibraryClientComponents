@@ -30,15 +30,15 @@
 			[Bindable]
 			public var code:String = "";
 			
-			[Embed(source="icons/filetypes/pdf-icon.jpg")]
+			[Embed(source="/icons/filetypes/pdf-icon.jpg")]
 			[Bindable]
 			public var pdfImgCls:Class;
 			
-			[Embed(source="icons/filetypes/xml-icon.jpg")]
+			[Embed(source="/icons/filetypes/xml-icon.jpg")]
 			[Bindable]
 			public var xmlImgCls:Class;
 			
-			[Embed(source="icons/filetypes/html-icon.jpg")]
+			[Embed(source="/icons/filetypes/html-icon.jpg")]
 			[Bindable]
 			public var htmlImgCls:Class;
 			

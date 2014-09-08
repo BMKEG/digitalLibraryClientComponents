@@ -215,9 +215,9 @@
 				height="100%" 
 				width="100%"/>
 	
-	<mx:Tree folderOpenIcon="@Embed(source='icons/node.gif')" 
-			 folderClosedIcon="@Embed(source='icons/node.gif')" 
-			 defaultLeafIcon="@Embed(source='icons/folder.gif')"
+	<mx:Tree folderOpenIcon="@Embed(source='/icons/node.gif')" 
+			 folderClosedIcon="@Embed(source='/icons/node.gif')" 
+			 defaultLeafIcon="@Embed(source='/icons/folder.gif')"
 			 includeIn="showFragments" 
 			 variableRowHeight="true"
 			 wordWrap="true"
