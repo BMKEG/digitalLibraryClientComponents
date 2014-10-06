@@ -7,12 +7,15 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import edu.isi.bmkeg.digitalLibrary.rl.events.*;
 	import edu.isi.bmkeg.digitalLibraryModule.events.*;
 	import edu.isi.bmkeg.digitalLibraryModule.model.*;
+	import edu.isi.bmkeg.digitalLibraryModule.view.forms.*;
 	import edu.isi.bmkeg.ftd.model.*;
 	import edu.isi.bmkeg.ftd.model.qo.*;
 	import edu.isi.bmkeg.ftd.rl.events.*;
 	import edu.isi.bmkeg.pagedList.*;
 	import edu.isi.bmkeg.pagedList.model.*;
+	import edu.isi.bmkeg.terminology.model.Ontology;
 	import edu.isi.bmkeg.terminology.model.Term;
+	import edu.isi.bmkeg.terminology.model.qo.Ontology_qo;
 	import edu.isi.bmkeg.terminology.model.qo.Term_qo;
 	import edu.isi.bmkeg.terminology.rl.events.*;
 	import edu.isi.bmkeg.utils.dao.Utils;
@@ -54,7 +57,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	{
 		
 		[Inject]
-		public var view:FragmenterView1;
+		public var view:FragmenterView;
 		
 		[Inject]
 		public var model:DigitalLibraryModel;
@@ -87,8 +90,30 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			addViewListener(RemoveAnnotationEvent.REMOVE_ANNOTATION, 
 				dispatch);
 			
-			addViewListener(ChangeFragmentType.CHANGE_FRAGMENT_TYPE, 
+			addViewListener(ChangeFragmentTypeEvent.CHANGE_FRAGMENT_TYPE, 
 				changeFragmentType);
+
+			addViewListener(ChangeFragmentCodeInViewEvent.CHANGE_FRAGMENT_CODE_IN_VIEW, 
+				changeFragmentCode);
+
+			addContextListener(ChangeFragmentCodeEvent.ADD_FRAGMENT_CODE, 
+				addFragmentCode);
+
+			addContextListener(ChangeFragmentCodeEvent.REMOVE_FRAGMENT_CODE, 
+				removeFragmentCode);
+			
+			addViewListener(RetrievePmcHtmlEvent.RETRIEVE_PMC_HTML, 
+				dispatchLoadHtml);			
+			
+			addViewListener(ListTermEvent.LIST_TERM, 
+				dispatch);			
+			
+			addViewListener(
+				DumpFragmentsToBratEvent.DUMP_FRAGMENTS_TO_BRAT, 
+				dumpFragments);
+			
+			addViewListener(ActivateTermInputPopupEvent.ACTIVATE_TERM_INPUT_POPUP,
+				activateTermInputPopupHandler);
 
 			addContextListener(LoadSwfResultEvent.LOAD_SWF_RESULT, 
 				swfFileLoadResult);
@@ -99,9 +124,6 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			addContextListener(LoadHtmlResultEvent.LOAD_HTML_RESULT, 
 				loadHtmlResult);
 			
-			addViewListener(RetrievePmcHtmlEvent.RETRIEVE_PMC_HTML, 
-				dispatchLoadHtml);
-			
 			addContextListener(
 				FindArticleCitationByIdResultEvent.FIND_ARTICLECITATIONBY_ID_RESULT, 
 				buildBitmapsFromFindByIdResult);
@@ -111,14 +133,15 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				updateFragments);
 
 			addContextListener(
-				ListTermViewsResultEvent.LIST_TERM_VIEWS_RESULT, 
+				ListTermResultEvent.LIST_TERM_RESULT, 
 				updateTerms);
-		
-			addViewListener(
-				DumpFragmentsToBratEvent.DUMP_FRAGMENTS_TO_BRAT, 
-				dumpFragments);
+
+			addContextListener(
+				ListOntologyResultEvent.LIST_ONTOLOGY_RESULT, 
+				updateOntologies);
 			
-			this.dispatch( new ListTermViewsEvent() );
+			var oQo:Ontology_qo = new Ontology_qo();
+			this.dispatch( new ListOntologyEvent(oQo) );
 			
 			if( model.citation != null ) {
 				this.buildBitmaps( model.citation.vpdmfId );
@@ -197,6 +220,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			var acQo:ArticleCitation_qo = new ArticleCitation_qo();
 			ftdQo.citation = acQo;
 			acQo.vpdmfId = String(model.citation.vpdmfId);
+			model.frgType
 			
 			this.dispatch( new ListArticleDocumentEvent( ftdQo ) );
 			
@@ -487,6 +511,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			ftdAnn.x4 = x4;
 			ftdAnn.y4 = y4;
 			ftdAnn.p = event.p;
+			ftdAnn.code = model.frgCode;
 			
 			var annXml:XMLList = this.xml..wd.(attribute('id') >= id1 && attribute('id') <= id2); 
 			var annStr:String = "";
@@ -598,7 +623,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 		}
 		
-		private function updateTerms(event:ListTermViewsResultEvent):void {
+		private function updateTerms(event:ListTermResultEvent):void {
 			
 			this.view.terms = model.terms;
 			
@@ -609,7 +634,21 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				var tempColor:uint = uint("0x" + str.substr(1));
 				view.colorLookup[ t.tree ] = tempColor;
 			}
+			
+			this.view.autoComplete.clear();
 					
+		}
+		
+		private function updateOntologies(event:ListOntologyResultEvent):void {
+			
+			this.view.ontologies = model.ontologies;
+			for each( var lvi:LightViewInstance in this.view.ontologies ) {
+				if(lvi.vpdmfLabel == "frg") {					
+					this.view.ontologyCombo.selectedItem = lvi;
+					break;
+				}
+			}
+			
 		}
 		
 		private function dumpFragments(event:DumpFragmentsToBratEvent):void {
@@ -637,11 +676,67 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			this.dispatch(new LoadHtmlEvent(vpdmfId) ); 
 						
 		}
+
+		private function changeFragmentCode(event:ChangeFragmentCodeInViewEvent):void {
+			
+			model.frgCode = view.frgCode;
 		
-		private function changeFragmentType(event:ChangeFragmentType):void {
+		}
+		
+		private function addFragmentCode(event:ChangeFragmentCodeEvent):void {
+			
+			model.frgCode = view.frgCode;
+			
+			event.block.code = model.frgCode;
+			
+			this.dispatch( new UpdateFTDFragmentEvent( event.block.fragment ) );
+			
+		}
+		
+		private function removeFragmentCode(event:ChangeFragmentCodeEvent):void {
+			
+			model.frgCode = "";
+			
+			var found:Boolean = false;
+			for each (var f:FTDFragment in model.fragments) {
+				for each (var b:FTDFragmentBlock in f.annotations) {
+					if( b == event.block ) {
+						found = true;
+						break;
+					}
+				}	
+			}
+			
+			if(!found) {
+				return;
+			}
+			
+			b.code = model.frgCode;
+			
+			this.dispatch( new UpdateFTDFragmentEvent( f ) );			
+			
+		}
+
+		private function changeFragmentType(event:ChangeFragmentTypeEvent):void {
 			
 			model.frgType = event.fType;
 			view.frgType = event.fType;
+
+			var termQo:Term_qo = new Term_qo();
+			var ontQo:Ontology_qo = new Ontology_qo();
+			termQo.ontology = ontQo;
+
+			ontQo.vpdmfLabel = event.fType;
+			
+			this.dispatch( new ListTermEvent(termQo) );
+
+			var ftdQo:FTD_qo = new FTD_qo();
+			ftdQo.vpdmfId = String(model.lightFtd.vpdmfId);
+			var frgQo:FTDFragment_qo = new FTDFragment_qo();
+			frgQo.frgType = String(model.frgType);
+			frgQo.ftd = ftdQo;
+			
+			this.dispatch( new ListFTDFragmentEvent( frgQo ) );
 			
 		}
 		
@@ -653,6 +748,21 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			var _itemRenderer:IFactory = this.view.pgList.itemRenderer;
 			this.view.pgList.itemRenderer = null;
 			this.view.pgList.itemRenderer = _itemRenderer;
+		}
+		
+		private function activateTermInputPopupHandler(event:ActivateTermInputPopupEvent):void {
+
+			var popup:TermInputPopup = new TermInputPopup();
+			popup.title = "Update Term for Fragment?";
+				
+			popup.block = event.ftdAnn;
+			popup.frgCode = model.frgCode;
+			popup.x = event.x;
+			popup.y = event.y;
+			
+			PopUpManager.addPopUp(popup, this.view);
+			mediatorMap.createMediator( popup );
+			
 		}
 		
 	}

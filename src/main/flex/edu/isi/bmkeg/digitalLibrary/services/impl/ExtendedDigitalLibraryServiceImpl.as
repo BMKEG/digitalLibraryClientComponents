@@ -60,13 +60,12 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 
 		private function asyncResponderFailHandler(fail:Object, token:Object):void
 		{
-			faultHandler(fail as FaultEvent);
+			dispatch(fail as FaultEvent);
 		}
 
 		private function faultHandler(event:FaultEvent):void
 		{
-			var failureEvent:UploadPdfFileFaultEvent = new UploadPdfFileFaultEvent(event);
-			dispatch(failureEvent);
+			dispatch(event);
 		}
 
 		// ~~~~~~~~~
@@ -76,9 +75,15 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 		public function addPmidEncodedPdfToCorpus(pdfFileData:Object, fileName:String, corpusName:String=null):void {
 			server.addPmidEncodedPdfToCorpus.cancel();
 			server.addPmidEncodedPdfToCorpus.addEventListener(ResultEvent.RESULT, addPmidEncodedPdfToCorpusResultHandler);
-			server.addPmidEncodedPdfToCorpus.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.addPmidEncodedPdfToCorpus.addEventListener(FaultEvent.FAULT, addPmidEncodedPdfToCorpusFaultHandler);
 			server.addPmidEncodedPdfToCorpus.send(pdfFileData, fileName, corpusName);
 		}
+
+		private function addPmidEncodedPdfToCorpusFaultHandler(event:FaultEvent):void
+		{
+			dispatch(new UploadPdfFileFaultEvent(event));
+		}
+
 		
 		private function addPmidEncodedPdfToCorpusResultHandler(event:ResultEvent):void
 		{
@@ -389,11 +394,11 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 
 		// ~~~~~~~~~
 		
-		public function retrieveFragmentTree():void  {
+		public function retrieveFragmentTree(acId:Number):void  {
 			server.retrieveFragmentTree.cancel();
 			server.retrieveFragmentTree.addEventListener(FaultEvent.FAULT, faultHandler);
 			server.retrieveFragmentTree.addEventListener(ResultEvent.RESULT, retrieveFragmentTreeHandler);
-			server.retrieveFragmentTree.send();				
+			server.retrieveFragmentTree.send(acId);				
 		}
 		
 		private function retrieveFragmentTreeHandler(event:ResultEvent):void
@@ -401,6 +406,51 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			var tree:XML = event.result as XML;
 			dispatch(new RetrieveFragmentTreeResultEvent(tree));
 		}
+		
+		// ~~~~~~~~~
+		
+		public function packageCorpusArchive(corpusId:Number):void {
+			server.packageCorpusArchive.cancel();
+			server.packageCorpusArchive.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.packageCorpusArchive.addEventListener(ResultEvent.RESULT, packageCorpusArchiveHandler);
+			server.packageCorpusArchive.send(corpusId);				
+		}
+		
+		private function packageCorpusArchiveHandler(event:ResultEvent):void
+		{
+			var zipFile:ByteArray = event.result as ByteArray;
+			
+			if( zipFile != null ) {
+				var saveFile:FileReference = new FileReference();
+				saveFile.addEventListener(Event.OPEN, saveBeginHandler);
+				saveFile.addEventListener(Event.COMPLETE, saveCompleteHandler);
+				saveFile.addEventListener(IOErrorEvent.IO_ERROR, saveIOErrorHandler);
+				saveFile.save(zipFile);
+			}
+			
+		}
+
+		private function saveBeginHandler(event:Event):void
+		{
+			/* IT'D BE NICE TO HAVE A PROGRESS BAR HERE*/
+		}
+		
+		private function saveCompleteHandler(event:Event):void
+		{
+			event.target.removeEventListener(Event.OPEN, saveBeginHandler);
+			event.target.removeEventListener(Event.COMPLETE, saveCompleteHandler);
+			event.target.removeEventListener(IOErrorEvent.IO_ERROR, saveIOErrorHandler);
+		}
+		
+		private function saveIOErrorHandler(event:IOErrorEvent):void
+		{
+			event.target.removeEventListener(Event.COMPLETE, saveCompleteHandler);
+			event.target.removeEventListener(IOErrorEvent.IO_ERROR, saveIOErrorHandler);
+			
+			trace("Error while trying to save:");
+			trace(event);
+		}
+		
 	
 	}
 

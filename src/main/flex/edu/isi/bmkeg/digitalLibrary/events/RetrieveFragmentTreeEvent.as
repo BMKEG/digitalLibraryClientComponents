@@ -11,15 +11,18 @@ package edu.isi.bmkeg.digitalLibrary.events
 		
 		public static const RETRIEVE_FRAGMENT_TREE:String = 
 			"retrieveFragmentTree";
+		
+		public var acId:Number;
 				
-		public function RetrieveFragmentTreeEvent()
+		public function RetrieveFragmentTreeEvent(acId:Number)
 		{
+			this.acId = acId;
 			super(RETRIEVE_FRAGMENT_TREE);
 		}
 		
 		override public function clone() : Event
 		{
-			return new RetrieveFragmentTreeEvent();
+			return new RetrieveFragmentTreeEvent(acId);
 		}
 		
 	}

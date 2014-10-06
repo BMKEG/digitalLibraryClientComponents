@@ -130,6 +130,12 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction.impl
 		{
 			return getOperation("retrieveFragmentTree");
 		}
+		
+		public function get packageCorpusArchive():AbstractOperation
+		{
+			return getOperation("packageCorpusArchive");
+		}
+		
 	}
 
 }

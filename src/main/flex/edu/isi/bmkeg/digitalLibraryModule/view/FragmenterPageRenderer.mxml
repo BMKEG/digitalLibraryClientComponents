@@ -23,11 +23,14 @@
 		<![CDATA[
 			import edu.isi.bmkeg.digitalLibrary.events.*;
 			import edu.isi.bmkeg.digitalLibraryModule.model.FragmentHolderForPage;
+			import edu.isi.bmkeg.digitalLibraryModule.view.forms.TermInputPopup;
 			import edu.isi.bmkeg.ftd.model.*;
+			import edu.isi.bmkeg.ftd.rl.events.UpdateFTDFragmentEvent;
 			import edu.isi.bmkeg.utils.ColorPalette;
 			
 			import flash.display.*;
 			import flash.display.Sprite;
+			import flash.text.*;
 			
 			import mx.collections.*;
 			import mx.controls.List;
@@ -35,7 +38,9 @@
 			import mx.events.FlexEvent;
 			import mx.events.ResizeEvent;
 			import mx.graphics.*;
+			import mx.managers.PopUpManager;
 			
+			import spark.components.List;
 			import spark.primitives.*;
 			
 			[Bindable]
@@ -131,7 +136,7 @@
 				//
 				var fillColor:uint = 0xffff00;
 				var frgPageList:spark.components.List = spark.components.List(this.owner);
-				var fragmenter:FragmenterView1 = FragmenterView1(frgPageList.owner);
+				var fragmenter:FragmenterView = FragmenterView(frgPageList.owner);
 				/*if( fragmenter.frgType != null && fragmenter.frgType.length > 0 ) {
 					fillColor = fragmenter.colorLookup[fragmenter.frgType];
 				}*/
@@ -215,23 +220,31 @@
 					
 			}
 			
-						
 			/** 
 			 * Can we use right click menu items to clear the annotations?
 			 */  
 			public function onFragmentHover(event:MouseEvent):void {
 
 				var s:FragmentSprite = FragmentSprite(event.target);				
+				
 				s.addChild(s.dismissControl);
 				s.dismissControl.addEventListener(MouseEvent.CLICK, dismissEventListener);
-				
+
+				s.addChild(s.addCodeControl);
+				s.addCodeControl.addEventListener(MouseEvent.CLICK, addCodeEventListener);
+
+
 			}
 
 			public function onFragmentOut(event:MouseEvent):void {
 				
 				var s:FragmentSprite = FragmentSprite(event.target);
 				s.removeChild( s.dismissControl );
+				s.removeChild( s.addCodeControl );
+
 				s.dismissControl.removeEventListener(MouseEvent.CLICK, dismissEventListener);
+				
+				s.addCodeControl.removeEventListener(MouseEvent.CLICK, addCodeEventListener);
 				
 			}
 			
@@ -247,7 +260,45 @@
 				frgSprite.removeEventListener(MouseEvent.ROLL_OUT, onFragmentOut);
 				
 			}			
-					
+
+			public function addCodeEventListener(event:MouseEvent):void {
+				
+				var s:TextField= TextField(event.target);
+				
+				var frgSprite:FragmentSprite = FragmentSprite(s.parent);
+				var ftdAnn:FTDFragmentBlock = frgSprite.ftdAnn;
+				
+				var owner:DisplayObjectContainer= this.owner;
+				
+				var frameY:Number = this.owner.transform.pixelBounds.top;
+				var frameX:Number = this.owner.transform.pixelBounds.left;
+				
+				var x:Number = s.x + frameX;
+				var y:Number = s.y + frameY;
+
+				this.dispatchEvent( new ActivateTermInputPopupEvent(ftdAnn, x, y, true)) ;
+
+			}			
+
+			public function removeCodeEventListener(event:MouseEvent):void {
+				
+				var s:Sprite = Sprite(event.target);
+				var frgSprite:FragmentSprite = FragmentSprite(s.parent);
+				var ftdAnn:FTDFragmentBlock = frgSprite.ftdAnn;
+				
+				var addEvent:ChangeFragmentCodeEvent = new ChangeFragmentCodeEvent(
+					ChangeFragmentCodeEvent.REMOVE_FRAGMENT_CODE,
+					ftdAnn,
+					true);
+				
+				this.dispatchEvent(addEvent);			
+				
+				frgSprite.removeEventListener(MouseEvent.ROLL_OVER, onFragmentHover);
+				frgSprite.removeEventListener(MouseEvent.ROLL_OUT, onFragmentOut);
+				
+			}			
+
+			
 		]]>
 	</fx:Script>
 	

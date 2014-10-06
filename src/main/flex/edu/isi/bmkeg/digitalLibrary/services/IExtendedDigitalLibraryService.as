@@ -55,8 +55,9 @@ package edu.isi.bmkeg.digitalLibrary.services
 			
 		function dumpFragmentsToBrat(ftdId:Number):void;
 
-		function retrieveFragmentTree():void;
+		function retrieveFragmentTree(acId:Number):void;
 
+		function packageCorpusArchive(corpusId:Number):void;
 		
 	}
 

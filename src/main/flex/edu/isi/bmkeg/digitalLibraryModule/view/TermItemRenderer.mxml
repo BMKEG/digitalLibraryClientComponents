@@ -43,12 +43,12 @@
 				
 				_list = owner as List;
 				
-				nameLabel.htmlText = value.tree;
+				nameLabel.htmlText = value.code;
 				
 				var frgTermList:List = List(this.owner);
 				var ac:AutoComplete = AutoComplete(frgTermList.owner);
 				var hg:HGroup = HGroup(ac.owner);
-				var fragmenter:FragmenterView1 = FragmenterView1(hg.owner);
+				var fragmenter:FragmenterView = FragmenterView(hg.owner);
 				var color:uint = fragmenter.colorLookup[value.tree];
 				var c:String = "#" + String(color).substr(2);
 				colorBox.setStyle( "backgroundColor", c );

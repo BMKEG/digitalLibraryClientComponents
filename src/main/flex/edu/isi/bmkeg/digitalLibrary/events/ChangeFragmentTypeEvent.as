@@ -6,14 +6,14 @@ package edu.isi.bmkeg.digitalLibrary.events
 	
 	import mx.rpc.events.FaultEvent;
 	
-	public class ChangeFragmentType extends Event 
+	public class ChangeFragmentTypeEvent extends Event 
 	{
 		
 		public static const CHANGE_FRAGMENT_TYPE:String = "changeFragmentType";
 		
 		public var fType:String;
 		
-		public function ChangeFragmentType(fType:String,
+		public function ChangeFragmentTypeEvent(fType:String,
 										 bubbles:Boolean=false, 
 										 cancelable:Boolean=false )
 		{
@@ -23,7 +23,7 @@ package edu.isi.bmkeg.digitalLibrary.events
 		
 		override public function clone() : Event
 		{
-			return new ChangeFragmentType(fType, bubbles, cancelable);
+			return new ChangeFragmentTypeEvent(fType, bubbles, cancelable);
 		}
 		
 	}

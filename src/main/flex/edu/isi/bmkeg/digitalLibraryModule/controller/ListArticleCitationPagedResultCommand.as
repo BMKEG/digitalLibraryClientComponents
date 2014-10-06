@@ -41,7 +41,8 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 					var v:String = tuple[i] as String;			
 					if( v == null )
 						v = "";
-					v = v.replace(/,/,", ");
+					v = v.replace(/,/gi,", ");
+					v = v.replace(/\<\|\>/gi,", ");
 					o[f]=v;	
 				}
 					

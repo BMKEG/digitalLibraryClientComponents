@@ -22,6 +22,7 @@
 			import edu.isi.bmkeg.digitalLibrary.events.*;
 			import edu.isi.bmkeg.digitalLibrary.rl.events.*;
 			import edu.isi.bmkeg.digitalLibraryModule.events.*;
+			import edu.isi.bmkeg.digitalLibraryModule.view.forms.*;
 			import edu.isi.bmkeg.ftd.rl.events.*;
 			import edu.isi.bmkeg.pagedList.PagedList;
 			import edu.isi.bmkeg.vpdmf.model.instances.LightViewInstance;
@@ -29,6 +30,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.collections.IList;
 			import mx.collections.errors.ItemPendingError;
+			import mx.managers.PopUpManager;
 			
 			import spark.events.GridSelectionEvent;
 			
@@ -109,55 +111,16 @@
 			// UPLOAD PDF TO DATABASE
 			// ~~~~~~~~~~~~~~~~~~~~~~
 			private function addArticleHandler():void {
-				
-				file = new FileReference();
-				file.addEventListener(Event.SELECT, selectHandler);
-				
-				var f1:String = "";
-				var f2:String = "";
-				
-				var ff:Array = fileFilters.split(",");
-				
-				for each( var f:String in ff) {
-					if( f1.length > 0 ) {
-						f1 += ", ";
-						f2 += ";";
-					}
-					f1 += "*." + f; 
-					f2 += "*." + f; 
-				}
-				
-				var fileFilter:FileFilter = new FileFilter("Pdf Documents",  f2);
-				file.browse([fileFilter]);
-				
-			}
-						
-			private function selectHandler(event:Event):void
-			{
-				file.removeEventListener(Event.SELECT, selectHandler);
-				
-				file.addEventListener(Event.COMPLETE, loadCompleteHandler);
-				file.load();
-									
-			}
-			
-			private function loadCompleteHandler(event:Event):void {
-				
-				file.removeEventListener(Event.COMPLETE, loadCompleteHandler);
-				
-				var upEvent:Event = new UploadPdfFileEvent(file.data, file.name, null);
-				
-				this.dispatchEvent(upEvent);
-				
-			}
 
-			// ~~~~~~~~~~~~~~~~~~~~~~~
-			// ADD ARTICLE TO CITATION
-			// ~~~~~~~~~~~~~~~~~~~~~~~
+				this.dispatchEvent( new ActivateUploadPdfPopupEvent() );
+				
+			}
+	
+			// ~~~~~~~~~~~~~~~~~~~~~
+			// ADD ARTICLE TO CORPUS
+			// ~~~~~~~~~~~~~~~~~~~~~
 			private function addArticleToCorpusHandler():void {		
-				
-				this.dispatchEvent( new ActivateCorpusListPopupEvent() );
-				
+				this.dispatchEvent( new ActivateCorpusListPopupEvent() );				
 			}
 
 			private function removeArticleFromCorpusHandler():void {
@@ -170,7 +133,11 @@
 				var o:Object = targetDocumentListDataGrid.selectedItem;	
 				dispatchEvent(new FullyDeleteArticleEvent(o.vpdmfId));	
 			}
-			
+
+			private function queryArticleHandler():void {		
+				this.dispatchEvent( new ActivateArticleQueryPopupEvent() );				
+			}
+
 			
 		]]>
 	</fx:Script>
@@ -241,6 +208,10 @@
 				  label="-" 
 				  click="removeArticleFromCorpusHandler()"
 				  toolTip="Remove selected articles from this corpus" />		
+		<s:Button id="queryArticleButton" width="37" height="22" fontSize="16" 
+				  label="?" 
+				  click="queryArticleHandler()"
+				  toolTip="Run a literature query on the corpus listed." />		
 	</s:Group>
 	
 	

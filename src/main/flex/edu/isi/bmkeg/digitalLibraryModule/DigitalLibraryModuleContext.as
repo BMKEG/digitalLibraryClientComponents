@@ -30,6 +30,13 @@ package edu.isi.bmkeg.digitalLibraryModule
 	import edu.isi.bmkeg.digitalLibraryModule.view.*;
 	import edu.isi.bmkeg.digitalLibraryModule.view.forms.*;
 	
+	import edu.isi.bmkeg.utils.uploadDirectoryControl.*;
+	import edu.isi.bmkeg.utils.serverUpdates.events.ServerUpdateEvent;
+	import edu.isi.bmkeg.utils.serverUpdates.services.IServerUpdateService;
+	import edu.isi.bmkeg.utils.serverUpdates.services.impl.ServerUpdateServiceImpl;
+	import edu.isi.bmkeg.utils.serverUpdates.services.serverInteraction.IServerUpdateServer;
+	import edu.isi.bmkeg.utils.serverUpdates.services.serverInteraction.impl.ServerUpdateServerImpl;
+	
 	import edu.isi.bmkeg.pagedList.model.*;
 	import edu.isi.bmkeg.pagedList.events.*;
 		 	
@@ -53,12 +60,15 @@ package edu.isi.bmkeg.digitalLibraryModule
 			mediatorMap.mapView(CorpusControl, CorpusControlMediator);
 			mediatorMap.mapView(ArticleList, ArticleListMediator_xx);
 			mediatorMap.mapView(ArticleCitationView, ArticleCitationViewMediator);
-			mediatorMap.mapView(FragmenterView1, FragmenterViewMediator);
+			mediatorMap.mapView(FragmenterView, FragmenterViewMediator);
 			
 			// Need a bit of extra detail to deal with popups
 			mediatorMap.mapView(CorpusPopup, CorpusPopupMediator, null, false, false);
 			mediatorMap.mapView(CorpusListPopup, CorpusListPopupMediator, null, false, false);
-			
+			mediatorMap.mapView(UploadPdfsPopup, UploadPdfsPopupMediator, null, false, false);
+			mediatorMap.mapView(ArticleQueryPopup, ArticleQueryPopupMediator, null, false, false);
+			mediatorMap.mapView(TermInputPopup, TermInputPopupMediator, null, false, false);
+
 			injector.mapSingleton(DigitalLibraryModel);
 			injector.mapSingleton(DigitalLibraryPagedListModel);
 			
@@ -70,6 +80,16 @@ package edu.isi.bmkeg.digitalLibraryModule
 			injector.mapSingletonOf(IFtdService, FtdServiceImpl);
 			injector.mapSingletonOf(ITerminologyServer, TerminologyServerImpl);
 			injector.mapSingletonOf(ITerminologyService, TerminologyServiceImpl);
+			
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// Simple pushed messages from the server.
+			injector.mapSingletonOf(IServerUpdateServer, ServerUpdateServerImpl);
+			injector.mapSingletonOf(IServerUpdateService, ServerUpdateServiceImpl);
+			
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// pushed messages from the server.
+			commandMap.mapEvent(ServerUpdateEvent.SERVER_UPDATE, 
+				ServerUpdateCommand);
 			
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// list the corpora on the server
@@ -109,6 +129,8 @@ package edu.isi.bmkeg.digitalLibraryModule
 					UploadPdfFileCommand);
 			commandMap.mapEvent(UploadPdfFileResultEvent.UPLOAD_PDF_FILE_RESULT, 
 					UploadPdfFileResultCommand);
+			commandMap.mapEvent(UploadPdfFileFaultEvent.UPLOAD_PDF_FILE_FAULT, 
+				UploadPdfFileFaultCommand);
 			
 			commandMap.mapEvent(InsertArticleCorpusEvent.INSERT_ARTICLECORPUS, InsertArticleCorpusCommand);
 			commandMap.mapEvent(InsertArticleCorpusResultEvent.INSERT_ARTICLECORPUS_RESULT, 
@@ -153,7 +175,11 @@ package edu.isi.bmkeg.digitalLibraryModule
 			
 			commandMap.mapEvent(FullyDeleteArticleEvent.FULLY_DELETE_ARTICLE, 
 				FullyDeleteArticleCommand);
-			
+
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// Download a zip of the text of a given corpus.
+			commandMap.mapEvent(DownloadCorpusZipEvent.DOWNLOAD_CORPUS_ZIP, 
+				DownloadCorpusZipCommand);
 			
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// Fragment based functions. 
@@ -181,14 +207,19 @@ package edu.isi.bmkeg.digitalLibraryModule
 				RemoveAnnotationResultCommand);
 
 			commandMap.mapEvent(DumpFragmentsToBratEvent.DUMP_FRAGMENTS_TO_BRAT,
-				DumpFragmentsToBratCommand);
-
+				DumpFragmentsToBratCommand);		
 			
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// Term-based functions. 
-			commandMap.mapEvent(ListTermViewsEvent.LIST_TERM_VIEWS, ListTermViewsCommand);
-			commandMap.mapEvent(ListTermViewsResultEvent.LIST_TERM_VIEWS_RESULT, ListTermViewsResultCommand);
-			
+			commandMap.mapEvent(ListOntologyEvent.LIST_ONTOLOGY, 
+					ListOntologyCommand);
+			commandMap.mapEvent(ListOntologyResultEvent.LIST_ONTOLOGY_RESULT, 
+					ListOntologyResultCommand);
+
+			commandMap.mapEvent(ListTermEvent.LIST_TERM, 
+				ListTermCommand);
+			commandMap.mapEvent(ListTermResultEvent.LIST_TERM_RESULT, 
+				ListTermResultCommand);			
 		}
 		
 		override public function dispose():void

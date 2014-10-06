@@ -46,6 +46,9 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 
 			addViewListener(DeleteCorpusByIdEvent.DELETE_CORPUS_BY_ID, 
 				dispatch);
+			
+			addViewListener(DownloadCorpusZipEvent.DOWNLOAD_CORPUS_ZIP, 
+				dispatch);
 
 			addContextListener(SelectCorpus.SELECT_CORPUS, 
 				selectCorpus);
@@ -99,14 +102,19 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			mediatorMap.createMediator( popup );
 
 			if( e.corpus == null || e.corpus.name == null )			
-				popup.cName.text = "";
+				popup.cName = "<Name>";
 			else 
-				popup.cName.text = e.corpus.name;
+				popup.cName = e.corpus.name;
 				
 			if( e.corpus == null || e.corpus.description == null )			
-				popup.desc.text = "";
+				popup.desc = "<Description>";
 			else 
-				popup.desc.text = e.corpus.description;
+				popup.desc = e.corpus.description;
+			
+			if( e.corpus == null || e.corpus.regex == null )			
+				popup.regexCode = "<Regex Code>";
+			else 
+				popup.regexCode = e.corpus.regex;
 				
 			popup.vpdmfId = e.corpus.vpdmfId;
 			

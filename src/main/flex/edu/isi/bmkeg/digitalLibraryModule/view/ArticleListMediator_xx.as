@@ -53,7 +53,13 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 
 			addViewListener(ActivateCorpusListPopupEvent.ACTIVATE_CORPUS_LIST_POPUP, 
 				activateCorpusListPopup);
+			
+			addViewListener(ActivateUploadPdfPopupEvent.ACTIVATE_PDF_UPLOAD_POPUP, 
+				activatePdfUploadPopup);
 
+			addViewListener(ActivateArticleQueryPopupEvent.ACTIVATE_ARTICLE_QUERY_POPUP, 
+				activateArticleQueryPopup);
+			
 			listModel.pageSize = model.listPageSize;
 
 			var qo:ArticleCitation_qo = new ArticleCitation_qo();
@@ -131,6 +137,57 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 		}
 		
+		private function activatePdfUploadPopup(e:ActivateUploadPdfPopupEvent):void {
+			
+			var popup:UploadPdfsPopup = PopUpManager.createPopUp(this.view, UploadPdfsPopup, true) as UploadPdfsPopup;
+			PopUpManager.centerPopUp(popup);
+			
+			mediatorMap.createMediator( popup );
+			
+			popup.tc = model.corpus;
+
+			if( model.corpus != null) 
+				popup.currentState = "corpusSpecified";
+				
+		}
+		
+		private function activateArticleQueryPopup(e:ActivateArticleQueryPopupEvent):void {
+			
+			var popup:ArticleQueryPopup = PopUpManager.createPopUp(this.view, ArticleQueryPopup, true) as ArticleQueryPopup;
+
+			if( model.corpus != null ) {
+				popup.corpusControl.text = model.corpus.name;
+			}
+			
+			if( model.queryLiteratureCitation != null ) {
+			
+				popup.pageControl.text = model.queryLiteratureCitation.pages;
+				popup.pmcidControl.text = model.queryLiteratureCitation.pmcid;
+				popup.pmidControl.text = model.queryLiteratureCitation.pmid;
+				popup.titleControl.text = model.queryLiteratureCitation.title;
+				popup.volumeControl.text = model.queryLiteratureCitation.volume;
+				popup.yearControl.text = model.queryLiteratureCitation.pubYear;
+			
+				if( model.queryLiteratureCitation.journal != null) {
+					popup.journalControl.text = model.queryLiteratureCitation.journal.abbr;
+				}
+			
+				var auStr:String = "";
+				if( model.queryLiteratureCitation.authorList.length > 0 ) {
+					for each( var au:Author_qo in model.queryLiteratureCitation.authorList ) {
+						auStr += au.surname + ", "
+					}
+					auStr = auStr.substr(0, auStr.length -2 );
+				}
+				popup.authorsControl.text = auStr;	
+
+			}			
+			
+			PopUpManager.centerPopUp(popup);
+			
+			mediatorMap.createMediator( popup );
+			
+		}
 	}
 	
 }

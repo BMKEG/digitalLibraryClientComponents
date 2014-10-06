@@ -50,6 +50,11 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 				var y4Array:Array = o['FTDFragment_11'].toString().split("<|>");
 				var pArray:Array = o['FTDFragment_12'].toString().split("<|>");
 				
+				var codeArray:Array = null;
+				if( o['FTDFragment_14'] != null ) {
+					codeArray = o['FTDFragment_14'].toString().split("<|>");
+				}
+					
 				for(var i:int=0; i<textArray.length; i++) {
 					var data:String = frg.frgOrder + "." + i;
 					
@@ -68,6 +73,12 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 					ftdAnn.x4 = x4Array[i];
 					ftdAnn.y4 = y4Array[i];
 										
+					if( codeArray[i] != null && codeArray[i] != "null" ) {
+						ftdAnn.code = codeArray[i];
+					} else {
+						ftdAnn.code = "-";
+					}
+						
 				}	
 								
 				model.fragments.addItem(frg);

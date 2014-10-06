@@ -1,5 +1,8 @@
+.actionScriptProperties
+.flexLibProperties
 .history
 .settings
 /target
 bin/
 .DS_Store
+/target

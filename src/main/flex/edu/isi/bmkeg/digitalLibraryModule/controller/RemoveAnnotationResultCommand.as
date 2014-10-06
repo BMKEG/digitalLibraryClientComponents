@@ -28,6 +28,7 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 			var frgQo:FTDFragment_qo= new FTDFragment_qo();
 			frgQo.ftd = ftdQo;
 			ftdQo.vpdmfId = String(model.lightFtd.vpdmfId);
+			frgQo.frgType = String(model.frgType);
 			
 			dispatch( new ListFTDFragmentEvent(frgQo) );
 			

@@ -2,6 +2,7 @@ package edu.isi.bmkeg.digitalLibraryModule.model
 {
 	
 	import edu.isi.bmkeg.digitalLibrary.model.citations.*;
+	import edu.isi.bmkeg.terminology.model.*;
 	import edu.isi.bmkeg.digitalLibrary.model.qo.citations.*;
 	import edu.isi.bmkeg.ftd.model.FTD;
 	import edu.isi.bmkeg.vpdmf.model.instances.LightViewInstance;
@@ -58,11 +59,24 @@ package edu.isi.bmkeg.digitalLibraryModule.model
 		// All fragments loaded from the current document
 		public var fragments:ArrayCollection = new ArrayCollection();
 		
-		// All terms loaded to annotate the current fragment
-		public var terms:ArrayCollection = new ArrayCollection();
-	
-		// The term currently set to annotate new fragments
+		// All ontologies loaded for annotation purposes.
+		public var ontologies:ArrayCollection = new ArrayCollection();
+		
+		// The ontology currently set to annotate fragments
 		public var frgType:String;
+		
+		// All terms loaded to annotate the current fragment
+		public var terms:ArrayCollection = new ArrayCollection();	
+
+		// The term currently set to annotate new fragments
+		public var frgCode:String;
+
+		// Message returned from server
+		public var message:String = "";
+		
+		// 
+		public var queryCorpusCount:int;
+
 
 	}
 

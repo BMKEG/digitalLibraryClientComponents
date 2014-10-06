@@ -2,28 +2,28 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 {	
 	import org.robotlegs.mvcs.Command;
 	
-	import edu.isi.bmkeg.digitalLibrary.services.IExtendedDigitalLibraryService;
-	import edu.isi.bmkeg.digitalLibrary.events.*;
+	import edu.isi.bmkeg.terminology.rl.services.ITerminologyService;
+	import edu.isi.bmkeg.terminology.rl.events.*;
 
 	import edu.isi.bmkeg.digitalLibraryModule.model.DigitalLibraryModel;
 
 	import flash.events.Event;
 	
-	public class ListTermViewsCommand extends Command
+	public class ListTermCommand extends Command
 	{
 	
 		[Inject]
-		public var event:ListTermViewsEvent;
+		public var event:ListTermEvent;
 
 		[Inject]
 		public var model:DigitalLibraryModel;
 		
 		[Inject]
-		public var service:IExtendedDigitalLibraryService;
+		public var service:ITerminologyService;
 				
 		override public function execute():void
 		{
-			service.listTermViews();	
+			service.listTerm(event.object);
 		}
 		
 	}

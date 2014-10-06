@@ -48,7 +48,10 @@
 		<![CDATA[
 			import edu.isi.bmkeg.digitalLibrary.events.*;
 			import edu.isi.bmkeg.ftd.model.*;
+			import edu.isi.bmkeg.terminology.model.qo.Term_qo;
+			import edu.isi.bmkeg.terminology.rl.events.ListTermEvent;
 			import edu.isi.bmkeg.utils.ColorPalette;
+			import edu.isi.bmkeg.vpdmf.model.instances.LightViewInstance;
 			
 			import mx.collections.*;
 			import mx.collections.ArrayCollection;
@@ -68,13 +71,19 @@
 			public var allText:String;
 			
 			[Bindable]
-			public var terms:ArrayCollection;
+			public var ontologies:ArrayCollection = new ArrayCollection;
 			
 			[Bindable] 
-			public var frgType:String;
+			public var frgType:String = "frg";
+
+			[Bindable]
+			public var terms:ArrayCollection;
 
 			[Bindable] 
-			public var frgNumber:String = "01";
+			public var frgCode:String = "fragment";
+			
+			[Bindable] 
+			public var frgNumber:String = "-";
 
 			[Bindable] 
 			public var xmlRoot:XML = <root/>;
@@ -138,14 +147,16 @@
 				var term:Object = autoComplete.selectedItem;
 				
 				if (term != null && term.hasOwnProperty( "colorId" )) {
-					this.dispatchEvent( new ChangeFragmentType(term.tree) );
+					this.frgCode = term["code"];
+					this.dispatchEvent( new ChangeFragmentCodeInViewEvent(this.frgCode) );
 				} else { 
-					this.dispatchEvent( new ChangeFragmentType("") );					
+					this.dispatchEvent( new ChangeFragmentCodeInViewEvent("") );					
 				}
 				
 			}
 			
 			/**
+			 * 
 			 * Check to see if the fragment text is a number
 			 */
 			protected function frgNumberInput_changeHandler(event:TextOperationEvent):void
@@ -158,6 +169,23 @@
 				this.dispatchEvent(new DumpFragmentsToBratEvent(1.0));				
 			}
 			
+			protected function ontologyCombo_changeHandler(event:IndexChangeEvent):void
+			{
+			
+				var ontLvi:LightViewInstance = this.ontologyCombo.selectedItem as LightViewInstance;
+							
+				this.dispatchEvent( new ChangeFragmentTypeEvent(ontLvi.vpdmfLabel) );
+				
+			}
+			
+			protected function ontologyCombo_labelFunc(item:Object):String {
+				var lvi:LightViewInstance = LightViewInstance(item);
+				
+				if( lvi == null || lvi.vpdmfLabel == null)
+					return "";
+				
+				return lvi.vpdmfLabel; 
+			}	
 		]]>
 	</fx:Script>
 	
@@ -173,13 +201,19 @@
 					   id="annotButton" 
 					   group="{documentView}"/>	
 		
-		<s:Label text="Fragment #" />
+		<s:Label text="Frg:" />
 		
 		<s:TextInput id="frgNumberInput" text="{frgNumber}" width="25" change="frgNumberInput_changeHandler(event)"/>
 
+		<s:ComboBox id="ontologyCombo" 
+					dataProvider="{ontologies}" 
+					width="80" 
+				 	labelFunction="ontologyCombo_labelFunc"
+					change="ontologyCombo_changeHandler(event)"/>
+
 		<hc:AutoComplete id="autoComplete" 
 						 dataProvider="{ terms }" 
-						 labelField="tree" 
+						 labelField="code" 
 						 matchType="anyPart" 
 						 prompt="Select an annotation term" 
 						 width="100%" change="{ handleAutoCompleteChange() }"
@@ -191,7 +225,7 @@
 						 dropDownItemRenderer="{ dropDownTermRenderer }"
 						 backspaceAction="focus"/>
 		
-		<s:Button id="dumpToBratButton" label="brat" click="dumpToBratButton_clickHandler(event)"/>
+		<s:Button id="dumpToBratButton" label="brat" width="60" click="dumpToBratButton_clickHandler(event)"/>
 
 	</s:HGroup>
 	

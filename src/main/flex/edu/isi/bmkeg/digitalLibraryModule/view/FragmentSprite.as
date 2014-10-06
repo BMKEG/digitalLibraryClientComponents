@@ -7,6 +7,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	
 	public class FragmentSprite extends Sprite
 	{
+		private var r:Number = 4.0;
 		
 		public var ftdAnn:FTDFragmentBlock;
 		public var sf:Number;
@@ -15,6 +16,8 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		
 		public var dismissControl:Sprite;
 		
+		public var addCodeControl:TextField;
+
 		public var idControl:Sprite;
 		
 		
@@ -41,7 +44,14 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				this.graphics.lineTo(ftdAnn.x3*sf, ftdAnn.y3*sf);
 				this.graphics.lineTo(ftdAnn.x3*sf, ftdAnn.y1*sf);
 				this.graphics.lineTo(ftdAnn.x1*sf, ftdAnn.y1*sf);
-				this.dismissControl = this.generateDismissControl(ftdAnn.x3*sf, ftdAnn.y3*sf);
+				
+				this.dismissControl = this.generateDismissControl(
+					ftdAnn.x3*sf, ftdAnn.y3*sf);
+				
+				this.addCodeControl = this.generateAddCodeControl(
+					(ftdAnn.x3-3*(r+3))*sf, 
+					(ftdAnn.y3+r+1)*sf);
+								
 			} 
 			// 
 			// multi-line
@@ -55,7 +65,15 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				this.graphics.lineTo(ftdAnn.x4*sf, ftdAnn.y4*sf);
 				this.graphics.lineTo(ftdAnn.x4*sf, ftdAnn.y1*sf);
 				this.graphics.lineTo(ftdAnn.x1*sf, ftdAnn.y1*sf);
-				this.dismissControl = this.generateDismissControl(ftdAnn.x2 * this.sf, ftdAnn.y2 * this.sf);
+				
+				this.dismissControl = this.generateDismissControl(
+					ftdAnn.x2 * this.sf,
+					ftdAnn.y2 * this.sf);
+				
+				this.addCodeControl = this.generateAddCodeControl(
+					(ftdAnn.x2-3*(r+1)) * this.sf, 
+					(ftdAnn.y2+r+1) * this.sf);
+							
 			}
 			this.graphics.endFill();
 			
@@ -64,26 +82,43 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 		}
 	
+		public function generateAddCodeControl(x:Number, y:Number):TextField {
+			
+			var ctl:TextField= new TextField();
+			
+			var f:TextFormat = new TextFormat(); 
+			f.color = 0xFF0000; 
+			f.bold = true;
+			ctl.setTextFormat(f);
+			
+			ctl.x = x;
+			ctl.y = y;
+			ctl.text= ftdAnn.code;
+				
+			return ctl;
+			
+		}
+				
 		public function generateDismissControl(x:Number, y:Number):Sprite {
 						
-			var dismissControl:Sprite = new Sprite();
+			var ctl:Sprite = new Sprite();
 			var r:Number = 4.0;
 			
-			dismissControl.graphics.lineStyle(1, 0x000000, 1.0)
-			dismissControl.graphics.beginFill(0xff0000, 1.0);
-			dismissControl.graphics.drawCircle(x,y,r+2);
-			dismissControl.graphics.lineStyle(2, 0xffffff, 1.0)
-			dismissControl.graphics.endFill();
-			dismissControl.graphics.moveTo(x,y);
-			dismissControl.graphics.lineTo(x - r * Math.cos(45), y + r * Math.cos(45) );
-			dismissControl.graphics.moveTo(x,y);
-			dismissControl.graphics.lineTo(x + r * Math.cos(45), y - r * Math.cos(45) );
-			dismissControl.graphics.moveTo(x,y);
-			dismissControl.graphics.lineTo(x + r * Math.cos(45), y + r * Math.cos(45) );
-			dismissControl.graphics.moveTo(x,y);
-			dismissControl.graphics.lineTo(x - r * Math.cos(45), y - r * Math.cos(45) );
+			ctl.graphics.lineStyle(1, 0x000000, 1.0)
+			ctl.graphics.beginFill(0xff0000, 1.0);
+			ctl.graphics.drawCircle(x,y,r+2);
+			ctl.graphics.lineStyle(2, 0xffffff, 1.0)
+			ctl.graphics.endFill();
+			ctl.graphics.moveTo(x,y);
+			ctl.graphics.lineTo(x - r * Math.cos(45), y + r * Math.cos(45) );
+			ctl.graphics.moveTo(x,y);
+			ctl.graphics.lineTo(x + r * Math.cos(45), y - r * Math.cos(45) );
+			ctl.graphics.moveTo(x,y);
+			ctl.graphics.lineTo(x + r * Math.cos(45), y + r * Math.cos(45) );
+			ctl.graphics.moveTo(x,y);
+			ctl.graphics.lineTo(x - r * Math.cos(45), y - r * Math.cos(45) );
 			
-			return dismissControl;
+			return ctl;
 			
 		}
 		

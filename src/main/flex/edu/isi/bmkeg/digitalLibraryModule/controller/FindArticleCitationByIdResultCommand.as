@@ -1,14 +1,18 @@
 package edu.isi.bmkeg.digitalLibraryModule.controller
 {
+	import edu.isi.bmkeg.digitalLibrary.model.qo.citations.*;
 	import edu.isi.bmkeg.digitalLibrary.rl.events.FindArticleCitationByIdResultEvent;
 	import edu.isi.bmkeg.digitalLibraryModule.model.DigitalLibraryModel;
-	import edu.isi.bmkeg.digitalLibrary.model.qo.citations.*;
-	import edu.isi.bmkeg.ftd.rl.events.*;
 	import edu.isi.bmkeg.ftd.model.qo.*;
-
-	import org.robotlegs.mvcs.Command;
+	import edu.isi.bmkeg.ftd.rl.events.*;
 	
-	public class FindArticleCitationByIdResultCommand extends Command
+	import mx.core.FlexGlobals;
+	
+	import org.robotlegs.utilities.modular.mvcs.ModuleCommand;
+	
+	import spark.components.Application;
+
+	public class FindArticleCitationByIdResultCommand extends ModuleCommand
 	{
 		[Inject]
 		public var event:FindArticleCitationByIdResultEvent;
@@ -17,8 +21,15 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 		public var model:DigitalLibraryModel;
 		
 		override public function execute():void {
-			
+		
 			model.citation = event.object;
+			
+			// dispatch this for other modules.
+			this.dispatchToModules(event);
+			
+			// Set this as a state variable in the application.
+			var app:Application = Application(FlexGlobals.topLevelApplication);
+			app["currentArticleCitation"] = model.citation;
 			
 		}
 		
