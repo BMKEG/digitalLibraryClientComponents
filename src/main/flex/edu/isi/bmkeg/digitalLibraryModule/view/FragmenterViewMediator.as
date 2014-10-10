@@ -29,6 +29,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	import flash.xml.XMLNode;
+	import flash.utils.getTimer;
 	
 	import flashx.textLayout.conversion.TextConverter;
 	
@@ -73,6 +74,8 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		private var drawWordsFlag:Boolean = false;
 		private var drawChunksFlag:Boolean = true;
 		private var drawPagesFlag:Boolean = true;
+		
+		private var clickDownTime:uint;
 		
 		import edu.isi.bmkeg.utils.ColorPalette;
 		
@@ -330,6 +333,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 			this.finishWordXml = null;
 			this.finishChunkXml = null;
+			this.clickDownTime = getTimer(); 
 				
 		}
 		
@@ -431,6 +435,17 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 			if( this.startChunkXml == null || this.startWordXml == null )
 				return;
+			
+			var clickUpTime:uint = getTimer();
+			if( clickUpTime - clickDownTime < 1000 )  {
+				this.clickDownTime = null;
+				this.startWordXml = null;
+				this.startChunkXml = null;
+				this.finishWordXml = null;
+				this.finishChunkXml = null;
+				return;
+				
+			}
 			
 			var rTree:fRTree = fRTree(model.rTreeArray.getItemAt(event.p - 1));
 			var words:ArrayCollection = ArrayCollection(model.indexedWordsByPage.getItemAt(event.p-1));
