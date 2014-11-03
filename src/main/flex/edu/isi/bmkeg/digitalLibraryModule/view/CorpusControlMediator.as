@@ -9,6 +9,8 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import edu.isi.bmkeg.digitalLibraryModule.view.forms.*;
 	import edu.isi.bmkeg.vpdmf.model.instances.LightViewInstance;
 	
+	import flash.external.ExternalInterface;
+	
 	import mx.managers.PopUpManager;
 	
 	import org.robotlegs.mvcs.Mediator;
@@ -50,6 +52,9 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			addViewListener(DownloadCorpusZipEvent.DOWNLOAD_CORPUS_ZIP, 
 				dispatch);
 
+			addContextListener(ListArticleCorpusResultEvent.LIST_ARTICLECORPUS_RESULT, 
+				selectCorpusFromCookie);
+			
 			addContextListener(SelectCorpus.SELECT_CORPUS, 
 				selectCorpus);
 
@@ -67,14 +72,13 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// On loading this control, we first list all the corpora on the server
 			dispatch(new ListArticleCorpusEvent(new Corpus_qo()));
-			
+						
 		}
 
 		public function listCorpusResultHandler(event:ListArticleCorpusResultEvent):void {
 			view.corpusList = model.corpora;
 			view.corpusCombo.selectedIndex = 0;
 		}
-
 		
 		public function dispatchFindCorpusById(event:FindArticleCorpusByIdEvent):void {
 			
@@ -127,16 +131,38 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			this.reloadArticleList();
 
 		}
+
+		private function selectCorpusFromCookie(event:ListArticleCorpusResultEvent):void {
+			
+			// if we have already selected a corpus as a cookie... 
+			// set the model corpus appropriately we'll now go and select that.
+			if (ExternalInterface.available) {
+				var corpusIdCookie:String = ExternalInterface.call("getCookie", "corpusCitationId");
+				if( corpusIdCookie != null && corpusIdCookie.length != 0) {
+					
+					this.selectCorpus( new SelectCorpus(Number(corpusIdCookie)) );
+					
+					dispatch( new FindArticleCorpusByIdEvent( Number(corpusIdCookie) ) );
+					
+					var ac:ArticleCitation_qo = new ArticleCitation_qo();
+					var c:Corpus_qo = new Corpus_qo();			
+					ac.corpora.addItem(c);
+					c.vpdmfId = String( Number(corpusIdCookie) );
+					dispatch(new ListArticleCitationPagedEvent(ac, 
+						0, model.listPageSize));
+					
+				}
+			}	
+			
+		}
 		
 		private function selectCorpus(event:SelectCorpus):void {
-						
 			for each( var c:Object in model.corpora ) {
 				if( c.vpdmfId == event.corpusId ) {
 					view.corpusCombo.selectedItem = c;
 					break;
 				}
 			}
-					
 		}
 
 		private function addArticleCitationToCorpusResult(

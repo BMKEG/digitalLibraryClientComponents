@@ -74,7 +74,6 @@ package edu.isi.bmkeg.digitalLibraryModule.model
 		// Message returned from server
 		public var message:String = "";
 		
-		// 
 		public var queryCorpusCount:int;
 
 

@@ -438,7 +438,6 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 			var clickUpTime:uint = getTimer();
 			if( clickUpTime - clickDownTime < 1000 )  {
-				this.clickDownTime = null;
 				this.startWordXml = null;
 				this.startChunkXml = null;
 				this.finishWordXml = null;

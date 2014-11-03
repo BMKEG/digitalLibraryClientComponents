@@ -7,6 +7,7 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 	import edu.isi.bmkeg.ftd.rl.events.*;
 	
 	import mx.core.FlexGlobals;
+	import flash.external.*;
 	
 	import org.robotlegs.utilities.modular.mvcs.ModuleCommand;
 	
@@ -27,10 +28,13 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 			// dispatch this for other modules.
 			this.dispatchToModules(event);
 			
-			// Set this as a state variable in the application.
-			var app:Application = Application(FlexGlobals.topLevelApplication);
-			app["currentArticleCitation"] = model.citation;
-			
+			//
+			// We need to save this as a cookie on the client.
+			//
+			if (ExternalInterface.available) {
+				ExternalInterface.call("setCookie", "articleCitationId", model.citation.vpdmfId, 10);   				
+			}
+						
 		}
 		
 	}

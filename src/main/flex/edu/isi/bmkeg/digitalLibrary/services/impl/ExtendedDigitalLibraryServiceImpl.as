@@ -2,13 +2,13 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 {
 
 	import edu.isi.bmkeg.digitalLibrary.events.*;
-	import edu.isi.bmkeg.utils.*;
 	import edu.isi.bmkeg.digitalLibrary.model.citations.*;
 	import edu.isi.bmkeg.digitalLibrary.model.qo.citations.ArticleCitation_qo;
+	import edu.isi.bmkeg.digitalLibrary.rl.events.ListArticleCitationPagedResultEvent;
 	import edu.isi.bmkeg.digitalLibrary.services.*;
 	import edu.isi.bmkeg.digitalLibrary.services.serverInteraction.*;
-	import edu.isi.bmkeg.digitalLibrary.rl.events.ListArticleCitationPagedResultEvent;
 	import edu.isi.bmkeg.ftd.model.*;
+	import edu.isi.bmkeg.utils.*;
 	import edu.isi.bmkeg.utils.dao.*;
 	
 	import flash.display.*;
@@ -27,8 +27,8 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	
-	import org.robotlegs.mvcs.Actor;
-	import org.libspark.utils.ForcibleLoader; 
+	import org.libspark.utils.ForcibleLoader;
+	import org.robotlegs.mvcs.Actor; 
 	
 	public class ExtendedDigitalLibraryServiceImpl extends Actor implements IExtendedDigitalLibraryService {
 
@@ -385,11 +385,9 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 		}
 
 		private function dumpFragmentsToBratHandler(event:ResultEvent):void
-		{
-			// External link to spawn off a new panel to this address. 
-			var url:URLRequest = new URLRequest("http://localhost:8001/index.xhtml#/" + event.result);
-			navigateToURL(url,"_blank");
-			
+		{						
+			var url:URLRequest = new URLRequest(event.result as String);
+			navigateToURL(url,"_blank");			
 		}
 
 		// ~~~~~~~~~

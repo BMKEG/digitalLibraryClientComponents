@@ -12,6 +12,8 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import edu.isi.bmkeg.pagedList.model.*;
 	import edu.isi.bmkeg.vpdmf.model.instances.LightViewInstance;
 	
+	import flash.external.ExternalInterface;
+	
 	import mx.collections.ArrayCollection;
 	import mx.managers.PopUpManager;
 	
@@ -60,11 +62,37 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			addViewListener(ActivateArticleQueryPopupEvent.ACTIVATE_ARTICLE_QUERY_POPUP, 
 				activateArticleQueryPopup);
 			
+			addContextListener(ListArticleCitationPagedResultEvent.LIST_ARTICLECITATION_PAGED_RESULT, 
+				selectArticleFromCookie);
+			
 			listModel.pageSize = model.listPageSize;
 
 			var qo:ArticleCitation_qo = new ArticleCitation_qo();
 			var event:ListArticleCitationPagedEvent = new ListArticleCitationPagedEvent(qo,0,200);
 			this.dispatch( event );
+			
+		}
+		
+		private function selectArticleFromCookie(
+				event:ListArticleCitationPagedResultEvent):void {
+			
+			// if we have already selected an article as a cookie... 
+			// set the articleId, we'll now go and select that.
+			if (ExternalInterface.available) {
+				var articleIdCookie:String = ExternalInterface.call("getCookie", "articleCitationId");
+				if( articleIdCookie != null && articleIdCookie.length != 0) {
+					var articleId:Number = Number(articleIdCookie);
+					dispatch( new FindArticleCitationByIdEvent( articleId ) );
+					for( var i:int=0; i<listModel.pagedListLength; i++) {
+						var a:Object = listModel.pagedList.getItemAt( i );
+						if( a.vpdmfId == articleId ) {
+							view.targetDocumentListDataGrid.setSelectedIndex(i);
+							break;
+						}
+					}
+					
+				}
+			}	
 			
 		}
 		
