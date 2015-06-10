@@ -49,8 +49,8 @@
 				var ac:AutoComplete = AutoComplete(frgTermList.owner);
 				var hg:HGroup = HGroup(ac.owner);
 				var fragmenter:FragmenterView = FragmenterView(hg.owner);
-				var color:uint = fragmenter.colorLookup[value.tree];
-				var c:String = "#" + String(color).substr(2);
+				var color:uint = fragmenter.colorLookup[value.tree.toLowerCase()];
+				var c:String = "#" + color.toString(16);
 				colorBox.setStyle( "backgroundColor", c );
 				
 				if (_selectedItems && _selectedItems.getItemIndex( value ) >= 0)

@@ -13,6 +13,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		public var sf:Number;
 		public var frgId:String;
 		public var blkId:int;
+		public var fill:uint;
 		
 		public var dismissControl:Sprite;
 		
@@ -32,6 +33,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			this.sf = sf;
 			this.frgId = frgId;
 			this.blkId = blkId;
+			this.fill = fill;
 			
 			this.graphics.lineStyle(1, 0xff0000, 0.2)
 			this.graphics.moveTo(ftdAnn.x1 * sf,ftdAnn.y1 * sf);
@@ -139,17 +141,17 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			t.width = t.textWidth + 4;
 			
 			var r:Number = (Math.max(t.textHeight, t.textWidth) / 2 ) + 2;
-			var x:Number = (ftdAnn.x1 - r*Math.cos(45) ) * this.sf;
-			var y:Number = (ftdAnn.y2 - r*Math.sin(45) ) * this.sf;
+			var x:Number = (ftdAnn.x1 - r ) * this.sf;
+			var y:Number = (ftdAnn.y2 - (t.textHeight + 6)/2 ) * this.sf;
 			
 			idControl.graphics.lineStyle(1, 0xff0000)
-			idControl.graphics.beginFill(0xffff00);
-			idControl.graphics.drawCircle(x,y,r);
+			idControl.graphics.beginFill(this.fill);
+			idControl.graphics.drawRoundRect(x, y, 2*r + 4, t.textHeight + 6, 6);
 			idControl.graphics.endFill();
 			
 			idControl.addChild(t);
-			t.x = x - (t.width/2.0);
-			t.y = y - (t.height/2.0);
+			t.x = x + 2;
+			t.y = y + 3;
 			
 			return idControl;
 			

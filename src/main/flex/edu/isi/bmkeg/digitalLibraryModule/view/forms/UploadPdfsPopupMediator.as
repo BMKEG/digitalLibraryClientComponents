@@ -2,11 +2,11 @@ package edu.isi.bmkeg.digitalLibraryModule.view.forms
 {
 
 	import edu.isi.bmkeg.digitalLibrary.events.*;
+	import edu.isi.bmkeg.digitalLibraryModule.model.*;
 	import edu.isi.bmkeg.ftd.model.qo.FTDRuleSet_qo;
 	import edu.isi.bmkeg.ftd.rl.events.*;
 	import edu.isi.bmkeg.pagedList.*;
 	import edu.isi.bmkeg.pagedList.model.*;
-	import edu.isi.bmkeg.digitalLibraryModule.model.*;
 	import edu.isi.bmkeg.utils.serverUpdates.services.IServerUpdateService;
 	import edu.isi.bmkeg.utils.updownload.*;
 	import edu.isi.bmkeg.utils.uploadDirectoryControl.*;
@@ -84,7 +84,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view.forms
 		
 		private function uploadPdfsToDatabase(event:UploadToBrowserCompleteEvent):void {
 			
-			var cName = null;
+			var cName:String = null;
 			if( view.tc != null )
 				cName = view.tc.name;
 			

@@ -74,6 +74,9 @@ package edu.isi.bmkeg.digitalLibraryModule.model
 		// Message returned from server
 		public var message:String = "";
 		
+		// Path to where a zip archive can be saved.
+		public var saveFilePath:String = "";
+		
 		public var queryCorpusCount:int;
 
 

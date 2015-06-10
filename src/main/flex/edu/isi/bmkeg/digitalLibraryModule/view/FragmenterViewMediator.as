@@ -28,8 +28,8 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import flash.net.*;
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
-	import flash.xml.XMLNode;
 	import flash.utils.getTimer;
+	import flash.xml.XMLNode;
 	
 	import flashx.textLayout.conversion.TextConverter;
 	
@@ -41,6 +41,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import mx.controls.SWFLoader;
 	import mx.core.IFactory;
 	import mx.events.CollectionEvent;
+	import mx.events.ResizeEvent;
 	import mx.graphics.*;
 	import mx.managers.PopUpManager;
 	import mx.utils.Base64Encoder;
@@ -80,6 +81,9 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		import edu.isi.bmkeg.utils.ColorPalette;
 		
 		override public function onRegister():void {
+			
+			addViewListener(ResizeEvent.RESIZE, 
+				eventDrivenRedraw);
 			
 			addViewListener(StartFragmenting.START_FRAGMENTING, 
 				startFragmenting);
@@ -640,15 +644,16 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		private function updateTerms(event:ListTermResultEvent):void {
 			
 			this.view.terms = model.terms;
+			view.colorLookup = new Object();
 			
 			for( var i:int=0; i<model.terms.length; i++) {
 				var t:Object = model.terms.getItemAt(i);
 				var o:Object = ColorPalette.colors.getItemAt(i);
 				var str:String = String(o.color);
-				var tempColor:uint = uint("0x" + str.substr(1));
-				view.colorLookup[ t.tree ] = tempColor;
+				var tempColor:uint = uint("0x" + str.substr(1) );
+				view.colorLookup[ t.tree.toLowerCase() ] = tempColor;
 			}
-			
+
 			this.view.autoComplete.clear();
 					
 		}
@@ -754,6 +759,10 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 		}
 		
+		private function eventDrivenRedraw(event:Event):void {
+			this.forceRedraw();
+		}
+
 		//
 		// Force a redraw for the List control.
 		// from: http://blog.9mmedia.com/?p=709

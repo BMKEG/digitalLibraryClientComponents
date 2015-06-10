@@ -49,6 +49,8 @@
 			[Bindable]
 			private var imgWidth:int = 790;
 			
+			public var colorLookup:Object = new Object;
+
 			private var ratio:Number = 1.0;
 
 			private var container:UIComponent = new UIComponent();
@@ -163,7 +165,11 @@
 				fh.fragmentsAdded.sort = srt;
 				fh.fragmentsAdded.refresh();
 				
-				for( var i:int=0; i<fh.fragmentsAdded.length; i++ ) {
+				//
+				// We count down over the added fragments to make sure the dismiss controls
+				// of one fragemtn appear in front of following fragments.
+				//
+				for( var i:int=fh.fragmentsAdded.length-1; i>=0; i-- ) {
 					var ftdAnn:FTDFragmentBlock = FTDFragmentBlock( fh.fragmentsAdded.getItemAt(i) );
 					var frg:FTDFragment = ftdAnn.fragment;
 					var blkIdx:int = -1;
@@ -180,9 +186,11 @@
 					if( ftdAnn.p != fh.page ) {
 						continue;
 					}
+					
+					var color:uint = lookupColor( ftdAnn.code );
 						
 					var frgSprite:FragmentSprite = new FragmentSprite( 
-						frg.frgOrder, blkIdx, ftdAnn, sf * fh.pdfScale, tempColor);
+						frg.frgOrder, blkIdx, ftdAnn, sf * fh.pdfScale, color);
 					this.container.addChild(frgSprite);
 					this.addedAnnotations.addItem(frgSprite);
 					frgSprite.addEventListener(MouseEvent.ROLL_OVER, onFragmentHover);
@@ -218,6 +226,16 @@
 				
 				}
 					
+			}
+			
+			private function lookupColor(type:String):uint {
+				
+				var pageList:spark.components.List = spark.components.List(this.owner);
+				var fragmenter:FragmenterView = FragmenterView(pageList.owner);
+				var color:uint = fragmenter.colorLookup[type.toLowerCase()];
+				
+				return color;
+			
 			}
 			
 			/** 
