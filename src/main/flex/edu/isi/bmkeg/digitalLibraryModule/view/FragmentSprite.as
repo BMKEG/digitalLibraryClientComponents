@@ -33,6 +33,8 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			this.sf = sf;
 			this.frgId = frgId;
 			this.blkId = blkId;
+			if( fill == 0 ) 
+				fill = 0xffff00;
 			this.fill = fill;
 			
 			this.graphics.lineStyle(1, 0xff0000, 0.2)
