@@ -25,6 +25,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import flash.events.*;
 	import flash.events.Event;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.net.*;
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
@@ -39,6 +40,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 	import mx.collections.errors.ItemPendingError;
 	import mx.controls.Alert;
 	import mx.controls.SWFLoader;
+	import mx.core.FlexGlobals;
 	import mx.core.IFactory;
 	import mx.events.CollectionEvent;
 	import mx.events.ResizeEvent;
@@ -566,7 +568,7 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				frg.ftd = model.lightFtd;
 
 				var label:String = "";
-				
+								
 				for(var i:int=0; i<frg.annotations.length; i++) {
 					var ftdAnn:FTDFragmentBlock = FTDFragmentBlock(frg.annotations.getItemAt(i));
 					
@@ -579,9 +581,17 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 				
 				}	
 				
-				var frgNode:XML = <node data={frg.frgOrder} label={frg.frgOrder + ":" + label}/>;				
+				var frgNode:XML = 
+					<node data={frg.frgOrder} label={frg.frgOrder + ":" + label}/>;				
 				view.xmlRoot.appendChild( frgNode );
 
+				for(var i:int=0; i<frg.annotations.length; i++) {
+					var ftdAnn:FTDFragmentBlock = FTDFragmentBlock(frg.annotations.getItemAt(i));
+					var ftdAnnNode:XML = 
+						<node data={frg.frgOrder + "." + ftdAnn.vpdmfOrder} 
+							label={frg.frgOrder + "." + ftdAnn.vpdmfOrder + ":" + ftdAnn.text}/>;				
+					frgNode.appendChild( ftdAnnNode );
+				}	
 			}
 
 			for each (var frgH:FragmentHolderForPage in pageArray ) {
@@ -708,6 +718,92 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 			
 			event.block.code = model.frgCode;
 			
+			//
+			// Need to do all the editing of this fragment here. 
+			//
+			var frg:FTDFragment = event.block.fragment;
+					
+			
+			//
+			// We permit splitting fragments here.
+			//
+			if( event.newFrgOrder != event.block.fragment.frgOrder ) {
+				
+				var needNewFrg:Boolean = false;
+				var splitExistingFrg:Boolean = false;
+				var newFrg:FTDFragment = null;
+
+				for( var i:int=0; i<model.fragments.length; i++) {					
+					var tempFrg:FTDFragment= model.fragments.getItemAt(i) as FTDFragment;
+					if( tempFrg.frgOrder == event.newFrgOrder ) {
+						newFrg = tempFrg;
+						break;
+					}
+				}
+				
+				var toRemoveLater:ArrayCollection = new ArrayCollection();
+				for( var i:int=0; i<frg.annotations.length; i++) {
+
+					var blk:FTDFragmentBlock = frg.annotations.getItemAt(i) as FTDFragmentBlock;
+
+					//
+					// if you rename the first block in a fragment, 
+					// you simply rename the fragment, but if you 
+					// rename a later block, you split the fragment
+					//
+					if( blk == event.block ) {
+						if( i == 0 && newFrg == null) {
+							frg.frgOrder = event.newFrgOrder;
+						} else if( newFrg == null ) {
+							needNewFrg = true;
+							splitExistingFrg = true;
+							newFrg = new FTDFragment();
+							newFrg.frgOrder = event.newFrgOrder;
+							newFrg.frgType = frg.frgType;
+							newFrg.ftd = frg.ftd;
+							newFrg.viewType = frg.viewType;	
+						} else {
+							splitExistingFrg = true;
+						}
+					}
+					
+					if( splitExistingFrg ) {
+						toRemoveLater.addItem(i);
+						blk.vpdmfOrder = newFrg.annotations.length;
+						newFrg.annotations.addItem(blk);
+					}
+					
+				}
+				
+				// Have to do this backwards. 
+				for(var i:int=toRemoveLater.length-1; i>=0; i--) {
+					frg.annotations.removeItemAt(toRemoveLater.getItemAt(i) as int);
+				}
+				
+				if( needNewFrg ) 
+					this.dispatch( new InsertFTDFragmentEvent( newFrg ) );
+				else 
+					this.dispatch( new UpdateFTDFragmentEvent( newFrg ) );
+								
+			} else if( event.newBlkOrder != event.block.vpdmfOrder ) {
+				//
+				// Update the ordering here. This should be automatic. 
+				// In the meantime, this is very helpful.
+				//
+				for( var i:int=0; i<frg.annotations.length; i++) {
+					var blk:FTDFragmentBlock = frg.annotations.getItemAt(i) as FTDFragmentBlock;
+					if( blk == event.block ) {
+						frg.annotations.removeItemAt(i);
+						frg.annotations.addItemAt(blk, event.newBlkOrder);
+						break;
+					}
+				}
+				for( var i:int=0; i<frg.annotations.length; i++) {
+					var blk:FTDFragmentBlock = frg.annotations.getItemAt(i) as FTDFragmentBlock;
+					blk.vpdmfOrder = i;
+				}		
+			}	
+			
 			this.dispatch( new UpdateFTDFragmentEvent( event.block.fragment ) );
 			
 		}
@@ -776,14 +872,20 @@ package edu.isi.bmkeg.digitalLibraryModule.view
 		private function activateTermInputPopupHandler(event:ActivateTermInputPopupEvent):void {
 
 			var popup:TermInputPopup = new TermInputPopup();
-			popup.title = "Update Term for Fragment?";
+			popup.title = "Update Fragment?";
 				
 			popup.block = event.ftdAnn;
-			popup.frgCode = model.frgCode;
-			popup.x = event.x;
-			popup.y = event.y;
+			popup.frgCode = event.ftdAnn.fragment.frgOrder;
 			
+			if(model.frgCode == null) 
+				popup.blkCode = event.ftdAnn.code;
+			else
+				popup.blkCode = model.frgCode;
+				
+			popup.order = event.ftdAnn.vpdmfOrder + 1;
+						
 			PopUpManager.addPopUp(popup, this.view);
+			PopUpManager.centerPopUp(popup);
 			mediatorMap.createMediator( popup );
 			
 		}

@@ -50,6 +50,11 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 				var y4Array:Array = o['FTDFragment_11'].toString().split("<|>");
 				var pArray:Array = o['FTDFragment_12'].toString().split("<|>");
 				
+				if( o['FTDFragment_12'].toString() == "null" )  {
+					trace("Fragment vpdmfId=" + frg.vpdmfId + ", has no annotations.");
+					continue;
+				}
+					
 				var codeArray:Array = null;
 				if( o['FTDFragment_14'] != null ) {
 					codeArray = o['FTDFragment_14'].toString().split("<|>");
@@ -61,6 +66,7 @@ package edu.isi.bmkeg.digitalLibraryModule.controller
 					var ftdAnn:FTDFragmentBlock = new FTDFragmentBlock();
 					frg.annotations.addItem(ftdAnn);
 					ftdAnn.fragment = frg;
+					ftdAnn.vpdmfOrder = i;
 					
 					ftdAnn.text = textArray[i];
 					ftdAnn.p = pArray[i];

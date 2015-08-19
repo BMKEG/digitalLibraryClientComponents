@@ -49,6 +49,8 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction
 		function get retrieveFragmentTree():AbstractOperation;
 		
 		function get packageCorpusArchive():AbstractOperation;
+
+		function get cleanUpEmptyFragments():AbstractOperation;
 		
 	}
 

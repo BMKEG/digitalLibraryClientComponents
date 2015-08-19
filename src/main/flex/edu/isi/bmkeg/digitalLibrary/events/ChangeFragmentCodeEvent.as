@@ -14,12 +14,18 @@ package edu.isi.bmkeg.digitalLibrary.events
 		public static const REMOVE_FRAGMENT_CODE:String = "removeFragmentCode";
 		
 		public var addRemove:String;
+		public var newFrgOrder:String;
+		public var newBlkOrder:Number;
 		public var block:FTDFragmentBlock;
 		
 		public function ChangeFragmentCodeEvent(addRemove:String,
 												block:FTDFragmentBlock,
+												newFrgOrder:String,
+												newBlkOrder:Number,			
 												bubbles:Boolean=false, 
 												cancelable:Boolean=false ) {
+			this.newFrgOrder = newFrgOrder;
+			this.newBlkOrder = newBlkOrder;
 			this.addRemove = addRemove;
 			this.block = block;
 			super(addRemove, bubbles, cancelable);
@@ -27,7 +33,8 @@ package edu.isi.bmkeg.digitalLibrary.events
 		
 		override public function clone(): Event {
 
-			return new ChangeFragmentCodeEvent(addRemove, block, bubbles, cancelable);
+			return new ChangeFragmentCodeEvent(addRemove, block, 
+				newFrgOrder, newBlkOrder, bubbles, cancelable);
 		
 		}
 		

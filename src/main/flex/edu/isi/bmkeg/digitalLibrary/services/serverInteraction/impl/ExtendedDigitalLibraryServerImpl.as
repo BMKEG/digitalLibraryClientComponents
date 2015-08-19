@@ -136,6 +136,13 @@ package edu.isi.bmkeg.digitalLibrary.services.serverInteraction.impl
 			return getOperation("packageCorpusArchive");
 		}
 		
+		public function get cleanUpEmptyFragments():AbstractOperation
+		{
+			return getOperation("cleanUpEmptyFragments");
+		}
+		
+		
+		
 	}
 
 }

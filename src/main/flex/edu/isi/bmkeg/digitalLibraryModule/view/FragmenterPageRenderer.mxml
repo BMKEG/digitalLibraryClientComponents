@@ -306,7 +306,9 @@
 				
 				var addEvent:ChangeFragmentCodeEvent = new ChangeFragmentCodeEvent(
 					ChangeFragmentCodeEvent.REMOVE_FRAGMENT_CODE,
-					ftdAnn,
+					ftdAnn, 
+					ftdAnn.fragment.frgOrder,
+					ftdAnn.vpdmfOrder, 
 					true);
 				
 				this.dispatchEvent(addEvent);			

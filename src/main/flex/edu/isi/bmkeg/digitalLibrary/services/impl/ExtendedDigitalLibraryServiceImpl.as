@@ -449,6 +449,20 @@ package edu.isi.bmkeg.digitalLibrary.services.impl
 			trace(event);
 		}
 		
+		// ~~~~~~~~~
+		
+		public function cleanUpEmptyFragments():void {
+			server.cleanUpEmptyFragments.cancel();
+			server.cleanUpEmptyFragments.addEventListener(FaultEvent.FAULT, faultHandler);
+			server.cleanUpEmptyFragments.addEventListener(ResultEvent.RESULT, cleanUpEmptyFragmentsHandler);
+			server.cleanUpEmptyFragments.send();				
+		}
+		
+		private function cleanUpEmptyFragmentsHandler(event:ResultEvent):void
+		{
+			trace("Executed cleanup on empty fragments");			
+		}
+		
 	
 	}
 

@@ -58,6 +58,8 @@ package edu.isi.bmkeg.digitalLibrary.services
 		function retrieveFragmentTree(acId:Number):void;
 
 		function packageCorpusArchive(corpusId:Number):void;
+
+		function cleanUpEmptyFragments():void;
 		
 	}
 
